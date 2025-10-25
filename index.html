@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TX HUB - 高级 Roblox 付费脚本中心</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --gray: #1a1a1a;
+            --accent-start: #8b5cf6;
+            --accent-end: #3b82f6;
+        }
+
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{
+            background:var(--black);color:var(--white);
+            font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+            line-height:1.6;overflow-x:hidden;
+        }
+
+        .container{max-width:1000px;margin:0 auto;padding:0 1.5rem;position:relative;}
+
+        [data-aos]{
+            opacity:0;transform:translateY(20px);
+            transition:all .6s cubic-bezier(.25,.8,.25,1);
+        }
+        [data-aos].aos-animate{opacity:1;transform:translateY(0);}
+
+        header{text-align:center;padding:3rem 0 2rem;}
+        h1{
+            font-size:2.4rem;font-weight:700;margin-bottom:.3rem;
+            background:linear-gradient(90deg,#fff,#ccc);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+        }
+        .subtitle{font-size:1rem;color:#aaa;font-weight:300;}
+
+        .stats-bar{
+            display:flex;justify-content:center;gap:3rem;margin:2.2rem 0 1.8rem;
+            flex-wrap:wrap;
+        }
+        .stat-big{
+            text-align:center;transition:all .7s ease;
+        }
+        .stat-number{
+            font-size:2.8rem;font-weight:800;line-height:1;
+            background:linear-gradient(90deg,var(--accent-start),var(--accent-end));
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+            margin-bottom:.3rem;
+            text-shadow:0 2px 8px rgba(139,92,246,.3);
+        }
+        .stat-label{
+            font-size:.9rem;color:#ccc;font-weight:500;letter-spacing:1px;
+        }
+
+        section{padding:2.5rem 0;border-bottom:1px solid #222;}
+        section:last-of-type{border-bottom:none;}
+        h2{
+            font-size:1.5rem;font-weight:600;margin-bottom:1.2rem;
+            position:relative;display:inline-block;
+        }
+        h2::after{
+            content:'';position:absolute;bottom:-6px;left:0;width:0;height:1px;
+            background:linear-gradient(90deg,var(--accent-start),var(--accent-end));
+            transition:width .5s ease;
+        }
+        h2.aos-animate::after{width:36px;}
+
+        .features-grid{
+            display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+            gap:1.2rem;margin-top:1.5rem;
+        }
+        .feature-item{
+            background:var(--gray);padding:1.2rem;border-radius:10px;
+            border:1px solid #333;transition:all .3s ease;
+        }
+        .feature-item:hover{
+            border-color:#555;transform:translateY(-4px);
+            box-shadow:0 8px 20px rgba(0,0,0,.3);
+        }
+        .feature-title{font-weight:600;font-size:1rem;margin-bottom:.4rem;}
+        .feature-desc{font-size:.88rem;color:#bbb;}
+
+        .changelog-container{
+            max-height:320px;overflow-y:auto;background:#111;
+            border:1px solid #333;border-radius:10px;padding:1.2rem;
+            margin-top:.8rem;font-size:.9rem;
+            scrollbar-width:thin;scrollbar-color:#555 #111;
+        }
+        .changelog-container::-webkit-scrollbar{width:5px;}
+        .changelog-container::-webkit-scrollbar-track{background:#111;border-radius:8px;}
+        .changelog-container::-webkit-scrollbar-thumb{background:#555;border-radius:8px;}
+        .changelog-item{
+            padding:.9rem 0;border-bottom:1px dashed #333;
+            display:flex;flex-direction:column;gap:.3rem;
+        }
+        .changelog-item:last-child{border-bottom:none;}
+        .changelog-date{
+            font-weight:600;font-size:.95rem;display:flex;align-items:center;gap:6px;
+        }
+        .changelog-date::before{
+            content:'';width:7px;height:7px;
+            background:linear-gradient(45deg,var(--accent-start),var(--accent-end));
+            border-radius:50%;
+        }
+        .changelog-content{color:#bbb;margin-left:13px;font-size:.88rem;}
+
+        .pricing{text-align:center;padding:2.5rem 0;}
+        .price-main{
+            font-size:3rem;font-weight:700;margin-bottom:.4rem;
+            background:linear-gradient(90deg,var(--accent-start),var(--accent-end));
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+        }
+        .price-sub{color:#888;font-size:.95rem;margin-bottom:1rem;}
+        .buy-now-btn{
+            background:linear-gradient(90deg,#10b981,#34d399);color:#fff;
+            border:none;padding:.9rem 2.2rem;border-radius:10px;font-weight:600;
+            font-size:1rem;cursor:pointer;transition:all .3s ease;
+            box-shadow:0 6px 20px rgba(16,185,129,.3);
+        }
+        .buy-now-btn:hover{
+            transform:translateY(-3px);box-shadow:0 12px 30px rgba(16,185,129,.4);
+        }
+
+        .group-section{text-align:center;}
+        .discord-input{
+            width:100%;max-width:480px;padding:.9rem 1.2rem;background:#111;
+            border:1px solid #333;border-radius:8px;color:var(--white);
+            font-family:'Inter',monospace;font-size:.95rem;margin:1.2rem auto 1.8rem;display:block;
+            transition:all .3s ease;
+        }
+        .discord-input:focus{border-color:var(--accent-start);box-shadow:0 0 0 1px var(--accent-start);outline:none;}
+
+        .copy-btn{
+            background:linear-gradient(90deg,var(--accent-start),var(--accent-end));
+            color:#fff;border:none;padding:.8rem 1.8rem;border-radius:8px;
+            font-weight:600;cursor:pointer;transition:all .3s ease;
+            font-size:.95rem;margin-top:1.5rem;
+        }
+        .copy-btn:hover{
+            transform:translateY(-2px);box-shadow:0 10px 20px rgba(139,92,246,.4);
+        }
+
+        footer{
+            text-align:center;padding:2rem 0;color:#666;font-size:.85rem;
+            border-top:1px solid #222;margin-top:1.5rem;
+        }
+
+        @media(max-width:768px){
+            h1{font-size:2rem;}
+            .container{padding:0 1.2rem;}
+            .features-grid{grid-template-columns:1fr;}
+            .stats-bar{gap:1.5rem;flex-direction:column;align-items:center;}
+            .stat-number{font-size:2.2rem;}
+            .price-main{font-size:2.5rem;}
+            .buy-now-btn{padding:.8rem 1.8rem;font-size:.95rem;}
+            .discord-input{max-width:100%;}
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header data-aos>
+            <h1>TX HUB</h1>
+            <p class="subtitle">高级 Roblox 脚本</p>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-big" data-aos data-aos-delay="100">
+                <div class="stat-number" id="exec-count">0+</div>
+                <div class="stat-label">TX 被执行次数</div>
+            </div>
+            <div class="stat-big" data-aos data-aos-delay="200">
+                <div class="stat-number" id="user-count">0+</div>
+                <div class="stat-label">付费用户</div>
+            </div>
+            <div class="stat-big" data-aos data-aos-delay="300">
+                <div class="stat-number" id="success-rate">0.0%</div>
+                <div class="stat-label">成功率</div>
+            </div>
+        </div>
+
+        <section id="features">
+            <h2 data-aos>亮点功能</h2>
+            <div class="features-grid">
+                <div class="feature-item" data-aos data-aos-delay="100"><div class="feature-title">全注入器支持</div><div class="feature-desc">兼容Delta Krnl Zenith等双端 热门执行器</div></div>
+                <div class="feature-item" data-aos data-aos-delay="200"><div class="feature-title">安全保护</div><div class="feature-desc">多层混淆 + 动态密钥白名单</div></div>
+                <div class="feature-item" data-aos data-aos-delay="300"><div class="feature-title">实时云端同步</div><div class="feature-desc">脚本云更新 白名单绑定设备跨账号使用</div></div>
+                <div class="feature-item" data-aos data-aos-delay="400"><div class="feature-title">服务器支持</div><div class="feature-desc">功能支持 死铁轨 Doors 种植花园 森林中的99夜等数十个热门服务器</div></div>
+                <div class="feature-item" data-aos data-aos-delay="500"><div class="feature-title">极简美观 UI</div><div class="feature-desc">使用Redz Wind obsidian美观UI</div></div>
+                <div class="feature-item" data-aos data-aos-delay="600"><div class="feature-title">为什么选择TX?</div><div class="feature-desc">持续更新 永不跑路 每个服务器功能都会认真对待 不会有功能垃圾的凑数服务器</div></div>
+            </div>
+        </section>
+
+        <section id="updates">
+            <h2 data-aos>更新日志</h2>
+            <div class="changelog-container" id="changelog-list">
+                <div style="text-align:center;color:#666;padding:1.5rem;">加载中...</div>
+            </div>
+        </section>
+
+        <section id="pricing">
+            <h2 data-aos>价格方案</h2>
+            <div class="pricing" data-aos data-aos-delay="200">
+                <div class="price-main">￥20/永久</div>
+                <div class="price-sub">一次性支付 · 终身授权 </div>
+                <p style="color:#888;margin:1rem 0 .8rem;font-size:.9rem;">仅支持微信付款</p>
+                <button class="buy-now-btn" onclick="buyNow()">立刻购买</button>
+            </div>
+        </section>
+
+        <section id="group" class="group-section">
+            <h2 data-aos>加入官方群聊</h2>
+            <p style="color:#aaa;margin-bottom:.8rem;" data-aos data-aos-delay="100">获取免费版 · 获取限免版 · 更多活动</p>
+            <input type="text" id="discord-link" class="discord-input" value="QQ群:766691084" readonly data-aos data-aos-delay="200">
+            <button class="copy-btn" onclick="copyLink()" data-aos data-aos-delay="300" style="margin-top:1.5rem;">复制链接</button>
+        </section>
+
+        <footer><p>© 2025 TX HUB. dev:退休.</p></footer>
+    </div>
+
+    <script>
+        function animateNumber(el, target, duration = 2200, isPercent = false) {
+            const startTime = Date.now();
+            const step = () => {
+                const progress = Math.min((Date.now() - startTime) / duration, 1);
+                const value = isPercent 
+                    ? (progress * target).toFixed(1)
+                    : Math.floor(progress * target);
+                el.textContent = isPercent ? value + '%' : value.toLocaleString() + '+';
+                if (progress < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+        }
+
+        async function loadChangelog() {
+            try {
+                const res = await fetch('changelog.json');
+                if (!res.ok) throw new Error();
+                const logs = await res.json();
+                const container = document.getElementById('changelog-list');
+                container.innerHTML = '';
+                logs.forEach((log, i) => {
+                    const item = document.createElement('div');
+                    item.className = 'changelog-item';
+                    item.setAttribute('data-aos', '');
+                    item.setAttribute('data-aos-delay', 100 + i * 80);
+                    item.innerHTML = `
+                        <div class="changelog-date">${log.date}</div>
+                        <div class="changelog-content">${log.content}</div>
+                    `;
+                    container.appendChild(item);
+                });
+                document.querySelectorAll('[data-aos]').forEach(el => observer.observe(el));
+            } catch (e) {
+                document.getElementById('changelog-list').innerHTML = `
+                    <div style="text-align:center;color:#f66;padding:1.5rem;font-size:.85rem;">
+                        暂无日志
+                    </div>`;
+            }
+        }
+
+        function buyNow() {
+            document.getElementById('group').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => {
+                const link = document.getElementById('discord-link');
+                link.select(); link.setSelectionRange(0, 99999);
+                navigator.clipboard.writeText(link.value).then(() => {
+                    const btn = document.querySelector('.copy-btn');
+                    const txt = btn.textContent;
+                    btn.textContent = '已复制!'; btn.style.background = 'linear-gradient(90deg,#10b981,#34d399)';
+                    setTimeout(() => { btn.textContent = txt; btn.style.background = ''; }, 2000);
+                });
+            }, 800);
+        }
+
+        function copyLink() {
+            const link = document.getElementById('discord-link');
+            link.select(); link.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(link.value).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                const txt = btn.textContent;
+                btn.textContent = '已复制!'; btn.style.background = 'linear-gradient(90deg,#10b981,#34d399)';
+                setTimeout(() => { btn.textContent = txt; btn.style.background = ''; }, 2000);
+            });
+        }
+
+        const observer = new IntersectionObserver(es => {
+            es.forEach(e => { if (e.isIntersecting) e.target.classList.add('aos-animate'); });
+        }, { threshold: .1 });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                animateNumber(document.getElementById('exec-count'), 100000, 2200);
+                animateNumber(document.getElementById('user-count'), 200, 2200);
+                animateNumber(document.getElementById('success-rate'), 99.9, 2200, true);
+            }, 400);
+
+            loadChangelog();
+            document.querySelectorAll('[data-aos]').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
