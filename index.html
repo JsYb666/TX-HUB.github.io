@@ -238,7 +238,7 @@
 
         async function loadChangelog() {
             try {
-                const res = await fetch('changelog.json');
+                const res = await fetch('changelogs.json');
                 if (!res.ok) throw new Error();
                 const logs = await res.json();
                 const container = document.getElementById('changelog-list');
