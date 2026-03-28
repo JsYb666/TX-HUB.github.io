@@ -142,10 +142,8 @@
         .stat-label {
             font-size: 1rem;
             color: var(--text-dim);
-            text-align: left;
+            text-align: center;
             margin-top: 0.6rem;
-            margin-left: 18px;
-            width: 180px;
         }
 
         section {
@@ -285,7 +283,9 @@
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s;
-            margin-top: 1.5rem;
+            margin: 1.5rem auto 0;
+            display: block;
+            width: fit-content;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -295,6 +295,36 @@
         .buy-now-btn:hover {
             background: #222;
             border-color: #666;
+        }
+
+    
+        .purchase-link-box {
+            margin: 2.5rem auto 0;
+            max-width: 520px;
+            background: var(--gray);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.8rem;
+            text-align: center;
+        }
+
+        .purchase-link-box h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .purchase-link-box .link-text {
+            background: #0d0d0d;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.95rem;
+            color: #ccc;
+            word-break: break-all;
+            margin-bottom: 1.2rem;
+            text-align: left;
         }
 
         .group-link {
@@ -319,7 +349,7 @@
             h1 { font-size: 2.6rem; }
             .nav-links { gap: 1.5rem; }
             .features-grid, .scripts-grid { grid-template-columns: 1fr; }
-            .stat-label { margin-left: 0; text-align: center; }
+            .stat-label { text-align: center; margin-left: 0; }
         }
     </style>
 </head>
@@ -408,8 +438,15 @@
                 <h2>价格方案</h2>
                 <div class="price-main">￥20/永久</div>
                 <div style="color:#777;margin:1rem 0 .8rem;font-size:.95rem;">一次性支付 · 终身授权</div>
-                <p style="color:#777;margin:1rem 0 .8rem;font-size:.95rem;">支持微信 支付宝</p>
-                <button class="buy-now-btn" onclick="buyNow()"><i class="fas fa-shopping-cart"></i>立刻购买</button>
+                <p style="color:#777;margin:1rem 0 .8rem;font-size:.95rem;">支持微信 支付宝付款</p>
+                <button class="buy-now-btn" onclick="buyNow()"><i class="fas fa-shopping-cart"></i>点击立刻购买</button>
+                
+                <!-- 新增购买链接展示框 -->
+                <div class="purchase-link-box">
+                    <h3><i class="fas fa-link"></i> 购买链接</h3>
+                    <div class="link-text" id="purchase-link-text">https://qy.71ywl.com/item/1cs1po</div>
+                    <button class="copy-btn" onclick="copyPurchaseLink()"><i class="fas fa-copy"></i>复制购买链接</button>
+                </div>
             </section>
         </div>
 
@@ -521,24 +558,33 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
         }
 
         function copyScript(text) {
-            navigator.clipboard.writeText(text)
-                .then(() => {
-                    const toast = document.createElement('div');
-                    toast.textContent = '已复制脚本';
-                    toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:12px 24px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.5);z-index:9999;font-size:1rem;';
-                    document.body.appendChild(toast);
-                    setTimeout(() => toast.remove(), 2500);
-                })
-                .catch(err => {
-                    alert('复制失败，请手动复制：\n' + text);
-                });
+            navigator.clipboard.writeText(text.trim()).then(() => {
+                const toast = document.createElement('div');
+                toast.textContent = '已复制脚本';
+                toast.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:14px 28px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.6);z-index:9999;font-size:1.02rem;';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 2800);
+            }).catch(() => {
+                alert('复制失败，请手动复制：\n' + text);
+            });
         }
 
-        function copyGroup(num, btn) {
-            navigator.clipboard.writeText(num).then(() => {
-                const orig = btn.textContent;
-                btn.textContent = '已复制';
-                setTimeout(() => btn.textContent = orig, 1800);
+        function copyGroup(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> 已复制';
+                setTimeout(() => btn.innerHTML = orig, 2000);
+            });
+        }
+
+        function copyPurchaseLink() {
+            const link = document.getElementById('purchase-link-text').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                const toast = document.createElement('div');
+                toast.textContent = '已复制购买链接';
+                toast.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:14px 28px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.6);z-index:9999;font-size:1.02rem;';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 2800);
             });
         }
 
