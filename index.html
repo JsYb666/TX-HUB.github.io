@@ -253,13 +253,42 @@
         }
 
         .changelog-container {
-            max-height: 380px;
+            max-height: 520px;
             overflow-y: auto;
             background: #0a0a0a;
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 1.6rem;
-            margin-top: 1.5rem;
+        }
+
+        .changelog-item {
+            background: var(--gray);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 1.4rem;
+            transition: all 0.3s;
+        }
+
+        .changelog-item:hover {
+            border-color: #555;
+            transform: translateY(-3px);
+        }
+
+        .changelog-date {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #ccc;
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .changelog-content {
+            font-size: 0.98rem;
+            color: var(--text-dim);
+            line-height: 1.85;
+            padding-left: 4px;
         }
 
         .pricing {
@@ -297,7 +326,6 @@
             border-color: #666;
         }
 
-    
         .purchase-link-box {
             margin: 2.5rem auto 0;
             max-width: 520px;
@@ -430,7 +458,7 @@
             <section>
                 <h2>更新日志</h2>
                 <div class="changelog-container" id="changelog-list">
-                    <div style="text-align:center;color:#555;padding:1.5rem;">加载中...</div>
+                    <div style="text-align:center;color:#666;padding:2rem 0;">正在加载更新日志...</div>
                 </div>
             </section>
 
@@ -439,9 +467,8 @@
                 <div class="price-main">￥20/永久</div>
                 <div style="color:#777;margin:1rem 0 .8rem;font-size:.95rem;">一次性支付 · 终身授权</div>
                 <p style="color:#777;margin:1rem 0 .8rem;font-size:.95rem;">支持微信 支付宝付款</p>
-                <button class="buy-now-btn" onclick="buyNow()"><i class="fas fa-shopping-cart"></i>点击立刻购买</button>
+                <button class="buy-now-btn" onclick="buyNow()"><i class="fas fa-shopping-cart"></i>立刻购买</button>
                 
-                <!-- 新增购买链接展示框 -->
                 <div class="purchase-link-box">
                     <h3><i class="fas fa-link"></i> 购买链接</h3>
                     <div class="link-text" id="purchase-link-text">https://qy.71ywl.com/item/1cs1po</div>
@@ -535,6 +562,31 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
     </div>
 
     <script>
+        async function loadChangelog() {
+            const container = document.getElementById('changelog-list');
+            try {
+                const res = await fetch('./changelogs.json', { cache: 'no-cache' });
+                if (!res.ok) throw new Error('文件访问失败');
+                const logs = await res.json();
+                if (!Array.isArray(logs) || logs.length === 0) {
+                    container.innerHTML = '<div style="text-align:center;color:#555;padding:2rem;">暂无更新日志</div>';
+                    return;
+                }
+                let html = '';
+                logs.forEach(log => {
+                    html += `
+                        <div class="changelog-item">
+                            <div class="changelog-date">${log.date || '未知日期'}</div>
+                            <div class="changelog-content">${log.content || '无内容'}</div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (err) {
+                container.innerHTML = '<div style="text-align:center;color:#777;padding:2rem;">加载更新日志失败</div>';
+            }
+        }
+
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', e => {
                 e.preventDefault();
@@ -594,10 +646,11 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
 
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
-                animateNumber(document.getElementById('exec-count'), 1050271, 2200);
-                animateNumber(document.getElementById('user-count'), 315, 2200);
-                animateNumber(document.getElementById('success-rate'), 99.85, 2200, true);
+                animateNumber(document.getElementById('exec-count'), 1046809, 2200);
+                animateNumber(document.getElementById('user-count'), 314, 2200);
+                animateNumber(document.getElementById('success-rate'), 99.9, 2200, true);
             }, 400);
+            loadChangelog();
         });
     </script>
 </body>
