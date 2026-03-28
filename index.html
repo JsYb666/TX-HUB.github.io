@@ -5,288 +5,488 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TX Script - 高级 Roblox 脚本</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
             --black: #000000;
-            --white: #ffffff;
+            --dark: #0a0a0a;
             --gray: #111111;
-            --dark-gray: #1a1a1a;
+            --light-gray: #1f1f1f;
             --text: #e8e8e8;
-            --text-dim: #999999;
+            --text-dim: #888888;
             --border: #222222;
-            --code-bg: #0d0d0d;
-            --code-border: #333333;
-            --link-text: #bbbbbb;
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background:var(--black);
-            color:var(--text);
-            font-family:'Inter',sans-serif;
-            line-height:1.6;
-            overflow-x:hidden;
+            background: var(--black);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        .container { max-width:1100px; margin:0 auto; padding:0 1.5rem; }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 50% 20%, rgba(255,255,255,0.05) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 0 1.8rem;
+        }
 
         nav {
-            position: sticky; top:0;
-            background:var(--black);
-            border-bottom:1px solid var(--border);
-            z-index:100; padding:1.2rem 0; text-align:center;
+            position: sticky;
+            top: 0;
+            background: rgba(10,10,10,0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            padding: 1.3rem 0;
         }
-        .nav-links { display:flex; justify-content:center; gap:3rem; flex-wrap:wrap; }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 2.8rem;
+            flex-wrap: wrap;
+        }
+
         .nav-links a {
-            color:var(--text-dim); text-decoration:none; font-weight:500; font-size:1.1rem;
-            padding:0.6rem 1.4rem; border-radius:6px; transition:all .3s;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 0.65rem 1.6rem;
+            border-radius: 6px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .nav-links a:hover, .nav-links a.active { color:var(--white); background:var(--dark-gray); }
 
-        [data-page] { display:none; }
-        [data-page].active { display:block; }
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--text);
+            background: var(--light-gray);
+        }
 
-        [data-aos] { opacity:0; transform:translateY(15px); transition:all .6s ease-out; }
-        [data-aos].aos-animate { opacity:1; transform:translateY(0); }
+        [data-page] { display: none; }
+        [data-page].active { display: block; }
 
-        header { text-align:center; padding:5rem 0 3rem; }
-        h1 { font-size:3rem; font-weight:700; color:var(--white); margin-bottom:0.5rem; text-shadow:0 2px 10px rgba(255,255,255,0.08); }
-        .subtitle { font-size:1.15rem; color:var(--text-dim); }
+        header {
+            text-align: center;
+            padding: 5.5rem 0 3.5rem;
+        }
 
-        .stats-bar { display:flex; justify-content:center; gap:3rem; margin:3rem 0; flex-wrap:wrap; }
-        .stat-big { text-align:center; }
-        .stat-number { font-size:3.5rem; font-weight:800; color:var(--white); }
-        .stat-label { font-size:1rem; color:var(--text-dim); font-weight:400; }
+        h1 {
+            font-size: 3.4rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
 
-        section { padding:3.5rem 0; }
+        .subtitle {
+            font-size: 1.15rem;
+            color: var(--text-dim);
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin: 3.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-big {
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 2.8rem;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .stat-number {
+            font-size: 3.6rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-dim);
+            text-align: left;
+            margin-top: 0.6rem;
+            margin-left: 18px;
+            width: 180px;
+        }
+
+        section {
+            padding: 4rem 0;
+        }
+
         h2 {
-            font-size:1.9rem; font-weight:600; color:var(--white);
-            position:relative; display:inline-block; padding-bottom:0.8rem;
-            text-shadow:0 1px 6px rgba(255,255,255,0.05);
-        }
-        h2::after {
-            content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
-            width:220px; height:2px;
-            background:linear-gradient(to right, transparent, #ffffff, transparent);
-            border-radius:1px; opacity:0.7;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text);
+            text-align: center;
+            margin-bottom: 2.8rem;
+            position: relative;
         }
 
-        .features-grid, .scripts-grid {
-            display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
-            gap:1.6rem; margin-top:2rem;
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90px;
+            height: 1px;
+            background: #444;
         }
-        .feature-item, .script-card, .group-tab {
-            background:var(--gray); border:1px solid var(--border); border-radius:10px;
-            padding:1.6rem; transition:all .25s ease;
+
+        .features-grid,
+        .scripts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.8rem;
         }
-        .feature-item:hover, .script-card:hover, .group-tab:hover {
-            border-color:#444444; transform:translateY(-3px);
+
+        .feature-item,
+        .script-card,
+        .group-tab {
+            background: var(--gray);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.8rem;
+            transition: all 0.3s;
+            overflow: hidden;
         }
-        .feature-title, .script-title { font-weight:600; color:var(--white); margin-bottom:0.6rem; }
-        .feature-desc, .script-desc { font-size:0.92rem; color:var(--text-dim); }
+
+        .feature-item:hover,
+        .script-card:hover,
+        .group-tab:hover {
+            border-color: #555;
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title,
+        .script-title {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.8rem;
+        }
+
+        .feature-desc,
+        .script-desc {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+        }
 
         .script-code-box {
-            background:var(--code-bg);
-            border:1px solid var(--code-border);
-            border-radius:6px;
-            padding:12px 16px;
-            font-family: 'Consolas', 'Courier New', monospace;
-            font-size:0.9rem;
-            color:#d4d4d4;
-            white-space:pre-wrap;
-            word-wrap:break-word;
-            margin-top:0.8rem;
-            overflow-x:auto;
+            background: #0d0d0d;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: #ccc;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-top: 1rem;
+            overflow-x: auto;
         }
 
-        .script-card .copy-btn, .group-tab button {
-            margin-top:1rem;
-            background:var(--dark-gray); color:var(--white);
-            border:1px solid #333333; padding:0.9rem;
-            border-radius:6px; font-weight:500; cursor:pointer; width:100%;
-            transition:all .25s;
+        .copy-btn,
+        .group-tab button {
+            margin-top: 1.2rem;
+            width: 100%;
+            padding: 1rem;
+            background: var(--light-gray);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        .script-card .copy-btn:hover, .group-tab button:hover {
-            background:#2a2a2a; border-color:#555555;
+
+        .copy-btn:hover,
+        .group-tab button:hover {
+            background: #222;
+            border-color: #666;
         }
 
         .changelog-container {
-            max-height:360px; overflow-y:auto; background:#0a0a0a;
-            border:1px solid var(--border); border-radius:10px; padding:1.5rem;
-            margin-top:1.2rem; font-size:0.94rem;
+            max-height: 380px;
+            overflow-y: auto;
+            background: #0a0a0a;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.6rem;
+            margin-top: 1.5rem;
         }
-        .changelog-date { font-weight:500; color:#cccccc; }
 
-        .pricing { text-align:center; padding:4rem 0; }
-        .price-main { font-size:4rem; font-weight:800; color:var(--white); margin-bottom:0.8rem; }
+        .pricing {
+            text-align: center;
+            padding: 4.5rem 0;
+        }
+
+        .price-main {
+            font-size: 4.2rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
         .buy-now-btn {
-            background:var(--dark-gray); color:var(--white); border:1px solid #444444;
-            padding:1.2rem 3.5rem; font-size:1.15rem; border-radius:8px;
-            cursor:pointer; transition:all .3s;
+            background: var(--light-gray);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 1.3rem 4rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        .buy-now-btn:hover { background:#2a2a2a; border-color:#666666; }
 
-        footer { text-align:center; padding:4rem 0 2rem; color:var(--text-dim); border-top:1px solid var(--border); }
+        .buy-now-btn:hover {
+            background: #222;
+            border-color: #666;
+        }
 
-        @media(max-width:768px) {
-            h1 { font-size:2.4rem; }
-            .price-main { font-size:3rem; }
-            .nav-links { gap:1.8rem; }
-            .features-grid, .scripts-grid { grid-template-columns:1fr; }
-            h2 { font-size:1.7rem; }
-            h2::after { width:160px; }
+        .group-link {
+            word-break: break-all;
+            overflow-wrap: break-word;
+            white-space: normal;
+            font-size: 0.88rem;
+            line-height: 1.45;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+            max-width: 100%;
+        }
+
+        footer {
+            text-align: center;
+            padding: 4.5rem 0 2.5rem;
+            color: var(--text-dim);
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.6rem; }
+            .nav-links { gap: 1.5rem; }
+            .features-grid, .scripts-grid { grid-template-columns: 1fr; }
+            .stat-label { margin-left: 0; text-align: center; }
         }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="nav-links">
-            <a href="#" data-page-target="paid" class="active">付费版</a>
-            <a href="#" data-page-target="free">公益系列</a>
-            <a href="#" data-page-target="group">官方群聊</a>
+        <div class="container">
+            <div class="nav-links">
+                <a href="#" data-page-target="paid" class="active"><i class="fas fa-crown"></i>付费版</a>
+                <a href="#" data-page-target="free"><i class="fas fa-gift"></i>公益系列</a>
+                <a href="#" data-page-target="group"><i class="fas fa-users"></i>官方群聊</a>
+            </div>
         </div>
     </nav>
 
     <div class="container">
 
         <div id="page-paid" data-page class="active">
-            <header data-aos>
+            <header>
                 <h1>TX Script</h1>
                 <p class="subtitle">高级 Roblox 脚本</p>
             </header>
 
             <div class="stats-bar">
-                <div class="stat-big" data-aos data-aos-delay="100">
+                <div class="stat-big">
+                    <i class="fas fa-bolt stat-icon"></i>
                     <div class="stat-number" id="exec-count">0+</div>
                     <div class="stat-label">TX 被执行次数</div>
                 </div>
-                <div class="stat-big" data-aos data-aos-delay="200">
+                <div class="stat-big">
+                    <i class="fas fa-user stat-icon"></i>
                     <div class="stat-number" id="user-count">0</div>
                     <div class="stat-label">付费用户</div>
                 </div>
-                <div class="stat-big" data-aos data-aos-delay="300">
+                <div class="stat-big">
+                    <i class="fas fa-check-circle stat-icon"></i>
                     <div class="stat-number" id="success-rate">0.0%</div>
                     <div class="stat-label">成功率</div>
                 </div>
             </div>
 
-            <section id="features">
-                <h2 data-aos>亮点功能</h2>
+            <section>
+                <h2>亮点功能</h2>
                 <div class="features-grid">
-                    <div class="feature-item" data-aos data-aos-delay="100"><div class="feature-title">全注入器支持</div><div class="feature-desc">兼容Delta Krnl Zenith等双端 热门执行器</div></div>
-                    <div class="feature-item" data-aos data-aos-delay="200"><div class="feature-title">安全保护</div><div class="feature-desc">多层混淆 + 动态密钥白名单</div></div>
-                    <div class="feature-item" data-aos data-aos-delay="300"><div class="feature-title">实时云端同步</div><div class="feature-desc">脚本云更新 白名单绑定设备跨账号使用</div></div>
-                    <div class="feature-item" data-aos data-aos-delay="400"><div class="feature-title">服务器支持</div><div class="feature-desc">功能支持 死铁轨 Doors 种植花园 森林中的99夜 最强战场 内脏与黑火药 兵工厂 战争大亨 等数十个热门服务器</div></div>
-                    <div class="feature-item" data-aos data-aos-delay="500"><div class="feature-title">极简美观 UI</div><div class="feature-desc">使用Redz Wind obsidian美观UI</div></div>
-                    <div class="feature-item" data-aos data-aos-delay="600"><div class="feature-title">为什么选择TX</div><div class="feature-desc">持续更新 永不跑路 每个服务器功能都会认真对待 不会有功能垃圾的凑数服务器</div></div>
+                    <div class="feature-item">
+                        <i class="fas fa-plug feature-icon"></i>
+                        <div class="feature-title">全注入器支持</div>
+                        <div class="feature-desc">兼容Delta Krnl Zenith等双端 热门执行器</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt feature-icon"></i>
+                        <div class="feature-title">安全保护</div>
+                        <div class="feature-desc">多层混淆 + 动态密钥白名单</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-cloud feature-icon"></i>
+                        <div class="feature-title">实时云端同步</div>
+                        <div class="feature-desc">脚本云更新 白名单绑定设备跨账号使用</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-gamepad feature-icon"></i>
+                        <div class="feature-title">服务器支持</div>
+                        <div class="feature-desc">功能支持 死铁轨 Doors 种植花园 森林中的99夜 最强战场 内脏与黑火药 兵工厂 战争大亨 等数十个热门服务器</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-palette feature-icon"></i>
+                        <div class="feature-title">极简美观 UI</div>
+                        <div class="feature-desc">使用Redz Wind obsidian美观UI</div>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-star feature-icon"></i>
+                        <div class="feature-title">为什么选择TX</div>
+                        <div class="feature-desc">持续更新 永不跑路 每个服务器功能都会认真对待 不会有功能垃圾的凑数服务器</div>
+                    </div>
                 </div>
             </section>
 
-            <section id="updates">
-                <h2 data-aos>更新日志</h2>
+            <section>
+                <h2>更新日志</h2>
                 <div class="changelog-container" id="changelog-list">
                     <div style="text-align:center;color:#555;padding:1.5rem;">加载中...</div>
                 </div>
             </section>
 
-            <section id="pricing">
-                <h2 data-aos>价格方案</h2>
-                <div class="pricing" data-aos data-aos-delay="200">
-                    <div class="price-main">￥20/永久</div>
-                    <div class="price-sub">一次性支付 · 终身授权</div>
-                    <p style="color:#777;margin:1rem 0 .8rem;font-size:.95rem;">仅支持微信付款</p>
-                    <button class="buy-now-btn" onclick="buyNow()">立刻购买</button>
-                </div>
+            <section class="pricing">
+                <h2>价格方案</h2>
+                <div class="price-main">￥20/永久</div>
+                <div style="color:#777;margin:1rem 0 .8rem;font-size:.95rem;">一次性支付 · 终身授权</div>
+                <p style="color:#777;margin:1rem 0 .8rem;font-size:.95rem;">支持微信 支付宝</p>
+                <button class="buy-now-btn" onclick="buyNow()"><i class="fas fa-shopping-cart"></i>立刻购买</button>
             </section>
         </div>
 
         <div id="page-free" data-page>
-            <header data-aos>
+            <header>
                 <h1>公益系列</h1>
                 <p class="subtitle">免费 · 公益脚本</p>
             </header>
 
             <section>
-                <h2 data-aos>TX公益系列</h2>
+                <h2>TX公益系列</h2>
                 <div class="scripts-grid">
-                    <div class="script-card" data-aos data-aos-delay="100">
+                    <div class="script-card">
                         <div class="script-title">TX V3免费版主脚本</div>
                         <div class="script-code-box">TX = "TX Script"
 loadstring(Game:HttpGet("https://raw.githubusercontent.com/JsYb666/TX-Free/refs/heads/main/TX-V3.0"))()</div>
-                        <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)">复制脚本</button>
+                        <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
                     </div>
 
-                    <div class="script-card" data-aos data-aos-delay="150">
+                    <div class="script-card">
                         <div class="script-title">TX死铁轨刷债券V4</div>
                         <div class="script-code-box">TX = "TX Script"
 Script = "TX自动刷债券V4"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/heads/main/Auto-Bond-V4"))()</div>
-                        <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)">复制脚本</button>
+                        <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
                     </div>
 
-                    <div class="script-card" data-aos data-aos-delay="200">
+                    <div class="script-card">
                         <div class="script-title">待完善</div>
                         <div class="script-code-box">loadstring(game:HttpGet("https://example.com/"))()</div>
-                        <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)">复制脚本</button>
+                        <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
                     </div>
 
-                    <div class="script-card" data-aos data-aos-delay="250">
+                    <div class="script-card">
                         <div class="script-title">待完善</div>
                         <div class="script-code-box">loadstring(game:HttpGet("https://example.com/"))()</div>
-                        <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)">复制脚本</button>
-                    </div>
-
-                    <div class="script-card" data-aos data-aos-delay="300">
-                        <div class="script-title">待完善</div>
-                        <div class="script-code-box">loadstring(game:HttpGet("https://example.com/"))()</div>
-                        <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)">复制脚本</button>
-                    </div>
-
-                    <div class="script-card" data-aos data-aos-delay="350">
-                        <div class="script-title">待完善</div>
-                        <div class="script-code-box">loadstring(game:HttpGet("https://example.com/"))()</div>
-                        <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)">复制脚本</button>
+                        <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
                     </div>
                 </div>
             </section>
         </div>
 
         <div id="page-group" data-page>
-            <header data-aos>
+            <header>
                 <h1>官方群聊</h1>
                 <p class="subtitle">官方消息 · 限免活动</p>
             </header>
 
             <section>
-                <h2 data-aos>加入我们的QQ群</h2>
-                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin:2.5rem 0;">
-                    <div class="group-tab" data-aos data-aos-delay="100">
-                        <h3>主群</h3>
+                <h2>加入我们的QQ群</h2>
+                <div class="scripts-grid">
+                    <div class="group-tab">
+                        <h3><i class="fas fa-users"></i> 主群</h3>
                         <div style="font-size:1.5rem;font-family:monospace;margin:1.2rem 0 0.4rem;color:#fff;">766691084</div>
                         <div class="group-link">点击链接加入群聊【「TX Script」[主群]-新年】：https://qun.qq.com/universal-share/share?ac=1&authKey=hlfvt8ap14t6uRcVZAnpsDE7K6QHha9K6Zge%2Fv40ab4ZDtVSsxHY1SByx4ww6b%2BT&busi_data=eyJncm91cENvZGUiOiIxNjAzNjkxMTEiLCJ0b2tlbiI6Illnc2N4TkVFSzQyOUNyRzNMTUUwY2JoelJWVzVjK0hSQVRnNWdGK1hnY1A5RVlQTDdaTkFHaHg2c3ZtejJQdFciLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=LiqFPjd-4EoY5gAZBS7FuOhWLrD7O_GfN56aDLWuqPjzVZIM4UCE0h-zgy7YKlRYGxc4EhugZu5U99NR3vAW9w&svctype=4&tempid=h5_group_info</div>
-                        <button onclick="copyGroup('点击链接加入群聊【「TX Script」[主群]-新年】：https://qun.qq.com/universal-share/share?ac=1&authKey=hlfvt8ap14t6uRcVZAnpsDE7K6QHha9K6Zge%2Fv40ab4ZDtVSsxHY1SByx4ww6b%2BT&busi_data=eyJncm91cENvZGUiOiIxNjAzNjkxMTEiLCJ0b2tlbiI6Illnc2N4TkVFSzQyOUNyRzNMTUUwY2JoelJWVzVjK0hSQVRnNWdGK1hnY1A5RVlQTDdaTkFHaHg2c3ZtejJQdFciLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=LiqFPjd-4EoY5gAZBS7FuOhWLrD7O_GfN56aDLWuqPjzVZIM4UCE0h-zgy7YKlRYGxc4EhugZu5U99NR3vAW9w&svctype=4&tempid=h5_group_info', this)">复制加入链接</button>
+                        <button onclick="copyGroup('点击链接加入群聊【「TX Script」[主群]-新年】：https://qun.qq.com/universal-share/share?ac=1&authKey=hlfvt8ap14t6uRcVZAnpsDE7K6QHha9K6Zge%2Fv40ab4ZDtVSsxHY1SByx4ww6b%2BT&busi_data=eyJncm91cENvZGUiOiIxNjAzNjkxMTEiLCJ0b2tlbiI6Illnc2N4TkVFSzQyOUNyRzNMTUUwY2JoelJWVzVjK0hSQVRnNWdGK1hnY1A5RVlQTDdaTkFHaHg2c3ZtejJQdFciLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=LiqFPjd-4EoY5gAZBS7FuOhWLrD7O_GfN56aDLWuqPjzVZIM4UCE0h-zgy7YKlRYGxc4EhugZu5U99NR3vAW9w&svctype=4&tempid=h5_group_info', this)"><i class="fas fa-copy"></i>复制加入链接</button>
                     </div>
 
-                    <div class="group-tab" data-aos data-aos-delay="150">
-                        <h3>二群</h3>
+                    <div class="group-tab">
+                        <h3><i class="fas fa-users"></i> 二群</h3>
                         <div style="font-size:1.5rem;font-family:monospace;margin:1.2rem 0 0.4rem;color:#fff;">160369111</div>
                         <div class="group-link">点击链接加入群聊【TX Script[二群]<$ǿĀD>【Xi团队】】：https://qun.qq.com/universal-share/share?ac=1&authKey=SAU359C0JYuJ5Hi7VYzawo8SINR%2BF6ypapNkMCsgo7RB0HHIqFngZCOspvnXhA3n&busi_data=eyJncm91cENvZGUiOiI3NjY2OTEwODQiLCJ0b2tlbiI6IlZYTmx5UVdsT0dZYnhyMXBJUGl4aENEckFNVW96c0d1Z2M4TldzMG5wWGVLZHBhOGd6ZWxaNzlnUGVxMFFqdVoiLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=wlFBEnu4SS9mnle3kNTnjfiwjIWZp1M6Wl8DRNvHcOUKbQD05z5qmSQ_yaVhFjfCX486OjWnwIaJxXREh7C6xw&svctype=4&tempid=h5_group_info</div>
-                        <button onclick="copyGroup('点击链接加入群聊【TX Script[二群]<$ǿĀD>【Xi团队】】：https://qun.qq.com/universal-share/share?ac=1&authKey=SAU359C0JYuJ5Hi7VYzawo8SINR%2BF6ypapNkMCsgo7RB0HHIqFngZCOspvnXhA3n&busi_data=eyJncm91cENvZGUiOiI3NjY2OTEwODQiLCJ0b2tlbiI6IlZYTmx5UVdsT0dZYnhyMXBJUGl4aENEckFNVW96c0d1Z2M4TldzMG5wWGVLZHBhOGd6ZWxaNzlnUGVxMFFqdVoiLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=wlFBEnu4SS9mnle3kNTnjfiwjIWZp1M6Wl8DRNvHcOUKbQD05z5qmSQ_yaVhFjfCX486OjWnwIaJxXREh7C6xw&svctype=4&tempid=h5_group_info', this)">复制加入链接</button>
+                        <button onclick="copyGroup('点击链接加入群聊【TX Script[二群]<$ǿĀD>【Xi团队】】：https://qun.qq.com/universal-share/share?ac=1&authKey=SAU359C0JYuJ5Hi7VYzawo8SINR%2BF6ypapNkMCsgo7RB0HHIqFngZCOspvnXhA3n&busi_data=eyJncm91cENvZGUiOiI3NjY2OTEwODQiLCJ0b2tlbiI6IlZYTmx5UVdsT0dZYnhyMXBJUGl4aENEckFNVW96c0d1Z2M4TldzMG5wWGVLZHBhOGd6ZWxaNzlnUGVxMFFqdVoiLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=wlFBEnu4SS9mnle3kNTnjfiwjIWZp1M6Wl8DRNvHcOUKbQD05z5qmSQ_yaVhFjfCX486OjWnwIaJxXREh7C6xw&svctype=4&tempid=h5_group_info', this)"><i class="fas fa-copy"></i>复制加入链接</button>
                     </div>
 
-                    <div class="group-tab" data-aos data-aos-delay="200">
-                        <h3>三群</h3>
+                    <div class="group-tab">
+                        <h3><i class="fas fa-users"></i> 三群</h3>
                         <div style="font-size:1.5rem;font-family:monospace;margin:1.2rem 0 0.4rem;color:#fff;">603435457</div>
                         <div class="group-link">点击链接加入群聊【TX Script[三群]<联邦><$ǿĀD>】：https://qun.qq.com/universal-share/share?ac=1&authKey=21IUjVcfONs3HAi0nZbeYa9R1oKl4K3T2o4nL1Nghk8MwE49IN0%2F4eWC8nxyEoX0&busi_data=eyJncm91cENvZGUiOiI2MDM0MzU0NTciLCJ0b2tlbiI6ImROeXYwNEx1R2RnWUFEQkNlWk5lcmpFVVRUcnFmYnpPSkZTYXdjc1dHQ1ovZFp1WDN3M0xuN0JSenpzY1I1cm8iLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=ggn9o3mLE50k7-4rAsnWVyGi3G5ECcyCXW72tek-XzgU0wbBYS0puY8lj56H1WDhZAWGNDOuAVrKDRuAiPXagg&svctype=4&tempid=h5_group_info</div>
-                        <button onclick="copyGroup('点击链接加入群聊【TX Script[三群]<联邦><$ǿĀD>】：https://qun.qq.com/universal-share/share?ac=1&authKey=21IUjVcfONs3HAi0nZbeYa9R1oKl4K3T2o4nL1Nghk8MwE49IN0%2F4eWC8nxyEoX0&busi_data=eyJncm91cENvZGUiOiI2MDM0MzU0NTciLCJ0b2tlbiI6ImROeXYwNEx1R2RnWUFEQkNlWk5lcmpFVVRUcnFmYnpPSkZTYXdjc1dHQ1ovZFp1WDN3M0xuN0JSenpzY1I1cm8iLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=ggn9o3mLE50k7-4rAsnWVyGi3G5ECcyCXW72tek-XzgU0wbBYS0puY8lj56H1WDhZAWGNDOuAVrKDRuAiPXagg&svctype=4&tempid=h5_group_info', this)">复制加入链接</button>
+                        <button onclick="copyGroup('点击链接加入群聊【TX Script[三群]<联邦><$ǿĀD>】：https://qun.qq.com/universal-share/share?ac=1&authKey=21IUjVcfONs3HAi0nZbeYa9R1oKl4K3T2o4nL1Nghk8MwE49IN0%2F4eWC8nxyEoX0&busi_data=eyJncm91cENvZGUiOiI2MDM0MzU0NTciLCJ0b2tlbiI6ImROeXYwNEx1R2RnWUFEQkNlWk5lcmpFVVRUcnFmYnpPSkZTYXdjc1dHQ1ovZFp1WDN3M0xuN0JSenpzY1I1cm8iLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=ggn9o3mLE50k7-4rAsnWVyGi3G5ECcyCXW72tek-XzgU0wbBYS0puY8lj56H1WDhZAWGNDOuAVrKDRuAiPXagg&svctype=4&tempid=h5_group_info', this)"><i class="fas fa-copy"></i>复制加入链接</button>
                     </div>
 
-                    <div class="group-tab" data-aos data-aos-delay="250">
-                        <h3>四群</h3>
+                    <div class="group-tab">
+                        <h3><i class="fas fa-users"></i> 四群</h3>
                         <div style="font-size:1.5rem;font-family:monospace;margin:1.2rem 0 0.4rem;color:#fff;">850870810</div>
                         <div class="group-link">点击链接加入群聊【TX Script[四群]<$ǿĀD>】：https://qun.qq.com/universal-share/share?ac=1&authKey=fp8vH5In6puBLZGYADvBSmDpv1ZlewPyTKtzD8dyqWs90aUZyEL2inoNuqRdw30U&busi_data=eyJncm91cENvZGUiOiI4NTA4NzA4MTAiLCJ0b2tlbiI6IlcvZHo5bWMzUkFEakZrNll6T0ZpYVhCMERBNjBlU2ovaDllVDZwdDF5U1NnVFNhUkJ4NW5qV1UxNU13OVFRNlIiLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=dJyVECJIz9KfR9YzK56Ph4wxXxyERCBLjCKGG3jZCzUdE9HOlVUk7cUfmHl-IS8htMFal3TtJmHn-UanDGop7w&svctype=4&tempid=h5_group_info</div>
-                        <button onclick="copyGroup('点击链接加入群聊【TX Script[四群]<$ǿĀD>】：https://qun.qq.com/universal-share/share?ac=1&authKey=fp8vH5In6puBLZGYADvBSmDpv1ZlewPyTKtzD8dyqWs90aUZyEL2inoNuqRdw30U&busi_data=eyJncm91cENvZGUiOiI4NTA4NzA4MTAiLCJ0b2tlbiI6IlcvZHo5bWMzUkFEakZrNll6T0ZpYVhCMERBNjBlU2ovaDllVDZwdDF5U1NnVFNhUkJ4NW5qV1UxNU13OVFRNlIiLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=dJyVECJIz9KfR9YzK56Ph4wxXxyERCBLjCKGG3jZCzUdE9HOlVUk7cUfmHl-IS8htMFal3TtJmHn-UanDGop7w&svctype=4&tempid=h5_group_info', this)">复制加入链接</button>
+                        <button onclick="copyGroup('点击链接加入群聊【TX Script[四群]<$ǿĀD>】：https://qun.qq.com/universal-share/share?ac=1&authKey=fp8vH5In6puBLZGYADvBSmDpv1ZlewPyTKtzD8dyqWs90aUZyEL2inoNuqRdw30U&busi_data=eyJncm91cENvZGUiOiI4NTA4NzA4MTAiLCJ0b2tlbiI6IlcvZHo5bWMzUkFEakZrNll6T0ZpYVhCMERBNjBlU2ovaDllVDZwdDF5U1NnVFNhUkJ4NW5qV1UxNU13OVFRNlIiLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=dJyVECJIz9KfR9YzK56Ph4wxXxyERCBLjCKGG3jZCzUdE9HOlVUk7cUfmHl-IS8htMFal3TtJmHn-UanDGop7w&svctype=4&tempid=h5_group_info', this)"><i class="fas fa-copy"></i>复制加入链接</button>
                     </div>
                 </div>
             </section>
@@ -306,10 +506,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
                 document.getElementById(`page-${target}`).classList.add('active');
                 document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
                 link.classList.add('active');
-                document.querySelectorAll('[data-aos]').forEach(el => {
-                    el.classList.remove('aos-animate');
-                    setTimeout(() => observer.observe(el), 100);
-                });
             });
         });
 
@@ -324,28 +520,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
             requestAnimationFrame(step);
         }
 
-        async function loadChangelog() {
-            try {
-                const res = await fetch('changelogs.json');
-                if (!res.ok) throw new Error();
-                const logs = await res.json();
-                const container = document.getElementById('changelog-list');
-                container.innerHTML = '';
-                logs.forEach((log, i) => {
-                    const item = document.createElement('div');
-                    item.className = 'changelog-item';
-                    item.innerHTML = `<div class="changelog-date">${log.date}</div><div class="changelog-content">${log.content}</div>`;
-                    container.appendChild(item);
-                });
-            } catch (e) {
-                document.getElementById('changelog-list').innerHTML = '<div style="text-align:center;color:#555;padding:1.5rem;">暂无日志</div>';
-            }
-        }
-
-        function buyNow() {
-            document.querySelector('[data-page-target="group"]').click();
-        }
-
         function copyScript(text) {
             navigator.clipboard.writeText(text)
                 .then(() => {
@@ -356,7 +530,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
                     setTimeout(() => toast.remove(), 2500);
                 })
                 .catch(err => {
-                    console.error('复制失败:', err);
                     alert('复制失败，请手动复制：\n' + text);
                 });
         }
@@ -369,9 +542,9 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
             });
         }
 
-        const observer = new IntersectionObserver(es => {
-            es.forEach(e => { if (e.isIntersecting) e.target.classList.add('aos-animate'); });
-        }, { threshold: .1 });
+        function buyNow() {
+            window.location.href = "https://qy.71ywl.com/item/1cs1po";
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
@@ -379,9 +552,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
                 animateNumber(document.getElementById('user-count'), 314, 2200);
                 animateNumber(document.getElementById('success-rate'), 99.9, 2200, true);
             }, 400);
-
-            loadChangelog();
-            document.querySelectorAll('[data-aos]').forEach(el => observer.observe(el));
         });
     </script>
 </body>
