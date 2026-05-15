@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TX Script - 高级 Roblox 脚本</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
@@ -17,11 +17,7 @@
             --border: #222222;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background: var(--black);
@@ -36,7 +32,7 @@
             content: '';
             position: fixed;
             inset: 0;
-            background-image: 
+            background-image:
                 linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
             background-size: 50px 50px;
@@ -53,11 +49,7 @@
             z-index: -1;
         }
 
-        .container {
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: 0 1.8rem;
-        }
+        .container { max-width: 1180px; margin: 0 auto; padding: 0 1.8rem; }
 
         nav {
             position: sticky;
@@ -89,8 +81,7 @@
             gap: 8px;
         }
 
-        .nav-links a:hover,
-        .nav-links a.active {
+        .nav-links a:hover, .nav-links a.active {
             color: var(--text);
             background: var(--light-gray);
         }
@@ -98,562 +89,986 @@
         [data-page] { display: none; }
         [data-page].active { display: block; }
 
-        header {
-            text-align: center;
-            padding: 5.5rem 0 3.5rem;
-        }
+        header { text-align: center; padding: 5.5rem 0 3.5rem; }
+        h1 { font-size: 3.4rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+        .subtitle { font-size: 1.15rem; color: var(--text-dim); }
 
-        h1 {
-            font-size: 3.4rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 0.5rem;
-        }
+        .stats-bar { display: flex; justify-content: center; gap: 4rem; margin: 3.5rem 0; flex-wrap: wrap; }
+        .stat-big { text-align: center; }
+        .stat-icon { font-size: 2.8rem; color: #666; margin-bottom: 12px; }
+        .stat-number { font-size: 3.6rem; font-weight: 800; color: var(--text); }
+        .stat-label { font-size: 1rem; color: var(--text-dim); text-align: center; margin-top: 0.6rem; }
 
-        .subtitle {
-            font-size: 1.15rem;
-            color: var(--text-dim);
-        }
-
-        .stats-bar {
-            display: flex;
-            justify-content: center;
-            gap: 4rem;
-            margin: 3.5rem 0;
-            flex-wrap: wrap;
-        }
-
-        .stat-big {
-            text-align: center;
-        }
-
-        .stat-icon {
-            font-size: 2.8rem;
-            color: #666;
-            margin-bottom: 12px;
-        }
-
-        .stat-number {
-            font-size: 3.6rem;
-            font-weight: 800;
-            color: var(--text);
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            color: var(--text-dim);
-            text-align: center;
-            margin-top: 0.6rem;
-        }
-
-        section {
-            padding: 4rem 0;
-        }
+        section { padding: 4rem 0; }
 
         h2 {
-            font-size: 2rem;
-            font-weight: 600;
-            color: var(--text);
-            text-align: center;
-            margin-bottom: 2.8rem;
-            position: relative;
+            font-size: 2rem; font-weight: 600; color: var(--text);
+            text-align: center; margin-bottom: 2.8rem; position: relative;
         }
-
         h2::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90px;
-            height: 1px;
-            background: #444;
+            content: ''; position: absolute; bottom: -8px; left: 50%;
+            transform: translateX(-50%); width: 90px; height: 1px; background: #444;
         }
 
-        .features-grid,
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.4rem;
+        }
+
         .scripts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.8rem;
+            gap: 1.6rem;
         }
 
-        .feature-item,
-        .script-card,
+        .feature-item {
+            background: var(--gray);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.6rem 1.8rem 1.8rem;
+            transition: border-color 0.3s, transform 0.3s;
+            overflow: hidden;
+            position: relative;
+        }
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #2d2d2d, transparent);
+        }
+        .feature-item:hover {
+            border-color: #3a3a3a;
+            transform: translateY(-3px);
+        }
+
+        .feature-icon {
+            font-size: 1.4rem;
+            color: #555;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px; height: 40px;
+            background: #161616;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+        }
+        .feature-title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text);
+            margin-bottom: 0.55rem;
+            letter-spacing: 0.01em;
+        }
+        .feature-desc {
+            font-size: 0.88rem;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .script-card {
+            background: var(--gray);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.6rem;
+            transition: border-color 0.3s, transform 0.3s;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .script-card:hover {
+            border-color: #3a3a3a;
+            transform: translateY(-3px);
+        }
+        .script-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text);
+            margin-bottom: 0;
+            letter-spacing: 0.02em;
+            padding-bottom: 0.9rem;
+            border-bottom: 1px solid #1c1c1c;
+        }
+
         .group-tab {
             background: var(--gray);
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 1.8rem;
-            transition: all 0.3s;
+            transition: border-color 0.3s, transform 0.3s;
             overflow: hidden;
         }
-
-        .feature-item:hover,
-        .script-card:hover,
         .group-tab:hover {
-            border-color: #555;
-            transform: translateY(-4px);
+            border-color: #3a3a3a;
+            transform: translateY(-3px);
         }
-
-        .feature-icon {
-            font-size: 2rem;
-            color: #666;
+        .group-tab h3 {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #555;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
             margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 7px;
         }
-
-        .feature-title,
-        .script-title {
+        .group-number {
+            font-size: 2rem;
+            font-family: 'JetBrains Mono', monospace;
             font-weight: 600;
             color: var(--text);
-            margin-bottom: 0.8rem;
-        }
-
-        .feature-desc,
-        .script-desc {
-            font-size: 0.95rem;
-            color: var(--text-dim);
+            letter-spacing: -1px;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #1c1c1c;
         }
 
         .script-code-box {
-            background: #0d0d0d;
-            border: 1px solid var(--border);
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
             border-radius: 8px;
             padding: 14px 16px;
-            font-family: 'Consolas', monospace;
-            font-size: 0.9rem;
-            color: #ccc;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            color: #888;
             white-space: pre-wrap;
             word-break: break-all;
             margin-top: 1rem;
             overflow-x: auto;
+            line-height: 1.75;
+            flex: 1;
         }
 
-        .copy-btn,
-        .group-tab button {
-            margin-top: 1.2rem;
-            width: 100%;
-            padding: 1rem;
-            background: var(--light-gray);
+        .copy-btn, .group-tab button {
+            margin-top: 1rem; width: 100%; padding: 0.85rem;
+            background: #0f0f0f; color: #888;
+            border: 1px solid #1f1f1f; border-radius: 8px;
+            font-size: 0.88rem; font-weight: 500; cursor: pointer; transition: all 0.25s;
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            letter-spacing: 0.02em;
+        }
+        .copy-btn:hover, .group-tab button:hover {
+            background: #161616;
+            border-color: #333;
             color: var(--text);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .copy-btn:hover,
-        .group-tab button:hover {
-            background: #222;
-            border-color: #666;
         }
 
         .changelog-container {
-            max-height: 520px;
-            overflow-y: auto;
-            background: #0a0a0a;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.6rem;
+            max-height: 520px; overflow-y: auto; background: #080808;
+            border: 1px solid #1a1a1a; border-radius: 12px; padding: 1.4rem;
         }
+        .changelog-container::-webkit-scrollbar { width: 4px; }
+        .changelog-container::-webkit-scrollbar-track { background: transparent; }
+        .changelog-container::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
 
         .changelog-item {
             background: var(--gray);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.8rem 2rem;
-            margin-bottom: 1.4rem;
-            transition: all 0.3s;
-        }
-
-        .changelog-item:hover {
-            border-color: #555;
-            transform: translateY(-3px);
-        }
-
-        .changelog-date {
-            font-size: 1.15rem;
-            font-weight: 600;
-            color: #ccc;
+            border: 1px solid #1a1a1a;
+            border-left: 2px solid #2a2a2a;
+            border-radius: 0 10px 10px 0;
+            padding: 1.4rem 1.6rem;
             margin-bottom: 1rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid #333;
+            transition: border-color 0.25s, transform 0.25s;
         }
-
+        .changelog-item:hover {
+            border-left-color: #555;
+            transform: translateX(3px);
+        }
+        .changelog-date {
+            font-size: 0.82rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: #555;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
         .changelog-content {
-            font-size: 0.98rem;
-            color: var(--text-dim);
-            line-height: 1.85;
-            padding-left: 4px;
+            font-size: 0.92rem;
+            color: #666;
+            line-height: 1.9;
         }
 
-        .pricing {
-            text-align: center;
-            padding: 4.5rem 0;
-        }
-
-        .price-main {
-            font-size: 4.2rem;
-            font-weight: 800;
-            color: var(--text);
-        }
+        .pricing { text-align: center; padding: 4.5rem 0; }
+        .price-main { font-size: 4.2rem; font-weight: 800; color: var(--text); }
 
         .buy-now-btn {
-            background: var(--light-gray);
-            color: var(--text);
-            border: 1px solid var(--border);
-            padding: 1.3rem 4rem;
-            font-size: 1.2rem;
-            font-weight: 600;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 1.5rem auto 0;
-            display: block;
-            width: fit-content;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            background: var(--light-gray); color: var(--text); border: 1px solid var(--border);
+            padding: 1.3rem 4rem; font-size: 1.2rem; font-weight: 600; border-radius: 10px;
+            cursor: pointer; transition: all 0.3s; margin: 1.5rem auto 0;
+            display: flex; align-items: center; justify-content: center; gap: 10px; width: fit-content;
         }
-
-        .buy-now-btn:hover {
-            background: #222;
-            border-color: #666;
-        }
+        .buy-now-btn:hover { background: #222; border-color: #666; }
 
         .purchase-link-box {
-            margin: 2.5rem auto 0;
-            max-width: 520px;
-            background: var(--gray);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.8rem;
-            text-align: center;
+            margin: 2.5rem auto 0; max-width: 520px; background: var(--gray);
+            border: 1px solid var(--border); border-radius: 12px; padding: 1.8rem; text-align: center;
         }
-
-        .purchase-link-box h3 {
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            color: var(--text);
-        }
-
+        .purchase-link-box h3 { font-size: 1.1rem; margin-bottom: 1rem; color: var(--text); }
         .purchase-link-box .link-text {
-            background: #0d0d0d;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 14px 16px;
-            font-family: 'Consolas', monospace;
-            font-size: 0.95rem;
-            color: #ccc;
-            word-break: break-all;
-            margin-bottom: 1.2rem;
-            text-align: left;
+            background: #0d0d0d; border: 1px solid var(--border); border-radius: 8px;
+            padding: 14px 16px; font-family: 'Consolas', monospace; font-size: 0.95rem;
+            color: #ccc; word-break: break-all; margin-bottom: 1.2rem; text-align: left;
         }
 
         .group-link {
-            word-break: break-all;
-            overflow-wrap: break-word;
-            white-space: normal;
-            font-size: 0.88rem;
-            line-height: 1.45;
-            color: var(--text-dim);
-            margin-bottom: 1rem;
-            max-width: 100%;
+            word-break: break-all; overflow-wrap: break-word; white-space: normal;
+            font-size: 0.88rem; line-height: 1.45; color: var(--text-dim);
+            margin-bottom: 1rem; max-width: 100%;
         }
 
         footer {
-            text-align: center;
-            padding: 4.5rem 0 2.5rem;
-            color: var(--text-dim);
-            border-top: 1px solid var(--border);
+            text-align: center; padding: 4.5rem 0 2.5rem;
+            color: var(--text-dim); border-top: 1px solid var(--border);
+        }
+
+        .monitor-header { text-align: center; padding: 5rem 0 2.5rem; }
+        .monitor-header h1 { font-size: 3.4rem; font-weight: 700; letter-spacing: -1px; }
+        .monitor-header .subtitle {
+            margin-top: 0.5rem; font-size: 1rem; color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .mon-topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--gray); border: 1px solid var(--border);
+            border-radius: 10px; padding: 0.9rem 1.6rem;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
+            color: var(--text-dim); margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
+        }
+        .mon-topbar-left { display: flex; align-items: center; gap: 1.8rem; flex-wrap: wrap; }
+        .mon-topbar-right { display: flex; align-items: center; gap: 8px; }
+
+        .topbar-item { display: flex; align-items: center; gap: 7px; }
+        .topbar-item i { color: #444; font-size: 0.78rem; }
+        .topbar-item span { color: var(--text); }
+
+        .period-tabs { display: flex; gap: 6px; }
+        .period-tab {
+            padding: 4px 12px; background: transparent;
+            border: 1px solid #2a2a2a; border-radius: 5px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+            color: #555; cursor: pointer; transition: all 0.2s;
+        }
+        .period-tab:hover { border-color: #444; color: #888; }
+        .period-tab.active { border-color: #555; color: var(--text); background: #1a1a1a; }
+
+        .mon-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.4rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .mon-card {
+            background: var(--gray); border: 1px solid var(--border);
+            border-radius: 14px; padding: 1.8rem 1.6rem;
+            position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.3s;
+        }
+        .mon-card:hover { border-color: #3a3a3a; transform: translateY(-3px); }
+        .mon-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 1px; background: linear-gradient(90deg, transparent, #2a2a2a, transparent);
+        }
+
+        .mc-label {
+            font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;
+            color: #444; letter-spacing: 0.14em; text-transform: uppercase;
+            margin-bottom: 1.1rem; display: flex; align-items: center; gap: 8px;
+        }
+
+        .mc-value {
+            font-family: 'JetBrains Mono', monospace; font-size: 2.8rem;
+            font-weight: 600; color: var(--text); line-height: 1;
+            margin-bottom: 0.7rem; letter-spacing: -2px;
+        }
+
+        .mc-value.loading {
+            font-size: 1.5rem; color: #333; letter-spacing: 0; animation: pulse-text 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-text { 0%,100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+
+        .mc-sub { font-size: 0.78rem; color: #444; font-family: 'JetBrains Mono', monospace; }
+
+        .status-row {
+            display: flex; align-items: center; gap: 10px;
+            font-family: 'JetBrains Mono', monospace; font-size: 1.1rem;
+            color: var(--text); margin-bottom: 0.7rem;
+        }
+
+        .status-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #333; flex-shrink: 0; position: relative;
+        }
+        .status-dot.online { background: #c0c0c0; }
+        .status-dot.online::after {
+            content: ''; position: absolute; inset: -4px; border-radius: 50%;
+            background: rgba(192,192,192,0.15); animation: pulse-ring 2.2s ease-out infinite;
+        }
+        .status-dot.error { background: #555; }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(2.4); opacity: 0; }
+        }
+
+        .uptime-bar-wrap { margin-top: 1.2rem; }
+        .uptime-bar-labels {
+            display: flex; justify-content: space-between;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+            color: #333; margin-bottom: 5px;
+        }
+        .uptime-bar-track {
+            height: 3px; background: #1a1a1a; border-radius: 2px; overflow: hidden;
+        }
+        .uptime-bar-fill {
+            height: 100%; background: #444; border-radius: 2px;
+            width: 0%; transition: width 1.5s ease;
+        }
+
+        .mini-chart { margin-top: 1.2rem; height: 42px; overflow: hidden; }
+        .mini-chart svg { width: 100%; height: 100%; }
+
+        .refresh-row {
+            margin-top: 0.8rem; display: flex; align-items: center; gap: 6px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #2f2f2f;
+        }
+        .refresh-dot {
+            width: 5px; height: 5px; border-radius: 50%; background: #2f2f2f;
+            animation: blink-dot 2s ease-in-out infinite;
+        }
+        @keyframes blink-dot { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+        .mon-chart-section {
+            background: var(--gray); border: 1px solid var(--border);
+            border-radius: 14px; padding: 1.6rem; margin-bottom: 1.6rem;
+        }
+        .mon-section-label {
+            font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+            color: #444; letter-spacing: 0.14em; text-transform: uppercase;
+            margin-bottom: 1.2rem; display: flex; align-items: center; gap: 8px;
+        }
+
+        .mon-log-section {
+            background: var(--gray); border: 1px solid var(--border);
+            border-radius: 14px; overflow: hidden; margin-bottom: 2rem;
+        }
+        .mon-log-header {
+            padding: 0.9rem 1.6rem; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            background: #0a0a0a;
+        }
+        .mon-log-header-left {
+            font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+            color: #444; letter-spacing: 0.14em; text-transform: uppercase;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .live-badge {
+            display: flex; align-items: center; gap: 5px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #444;
+        }
+        .live-badge::before {
+            content: ''; width: 5px; height: 5px; border-radius: 50%;
+            background: #555; animation: blink-dot 1.6s ease-in-out infinite;
+        }
+
+        .mon-log-body {
+            padding: 1rem 1.4rem; max-height: 200px; overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; line-height: 1.9;
+        }
+        .log-row {
+            display: flex; gap: 1.4rem; color: var(--text-dim);
+            border-bottom: 1px solid #141414; padding: 1px 0;
+        }
+        .log-row:last-child { border-bottom: none; }
+        .log-time { color: #333; flex-shrink: 0; }
+        .log-user { color: #666; flex-shrink: 0; min-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .log-msg { color: #555; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .mon-action {
+            text-align: center; padding: 0.5rem 0 4rem;
+        }
+        .mon-action-note {
+            font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+            color: #2f2f2f; margin-bottom: 1.6rem; letter-spacing: 0.04em;
+        }
+        .mon-enter-btn {
+            display: inline-flex; align-items: center; gap: 14px;
+            padding: 1.1rem 3rem; background: var(--light-gray);
+            color: var(--text); border: 1px solid #2d2d2d;
+            border-radius: 10px; font-size: 1rem; font-weight: 600;
+            cursor: pointer; text-decoration: none; transition: all 0.3s;
+            font-family: 'JetBrains Mono', monospace; letter-spacing: 0.02em;
+            position: relative; overflow: hidden;
+        }
+        .mon-enter-btn::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .mon-enter-btn:hover { background: #1c1c1c; border-color: #555; transform: translateY(-2px); }
+        .mon-enter-btn .btn-icon { font-size: 0.9rem; color: #666; }
+        .mon-enter-btn .btn-sub { font-size: 0.68rem; color: #444; display: block; font-weight: 400; margin-top: 2px; }
+
+        .mon-error {
+            background: #0d0d0d; border: 1px solid #1f1f1f;
+            border-radius: 8px; padding: 12px 16px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+            color: #444; margin-bottom: 1rem; display: none;
         }
 
         @media (max-width: 768px) {
             h1 { font-size: 2.6rem; }
             .nav-links { gap: 1.5rem; }
             .features-grid, .scripts-grid { grid-template-columns: 1fr; }
-            .stat-label { text-align: center; margin-left: 0; }
+            .mon-cards { grid-template-columns: 1fr; }
+            .mon-topbar { flex-direction: column; align-items: flex-start; }
+            .mc-value { font-size: 2.2rem; }
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="container">
-            <div class="nav-links">
-                <a href="#" data-page-target="paid" class="active"><i class="fas fa-crown"></i>付费版</a>
-                <a href="#" data-page-target="free"><i class="fas fa-gift"></i>公益系列</a>
-                <a href="#" data-page-target="group"><i class="fas fa-users"></i>官方群聊</a>
-            </div>
-        </div>
-    </nav>
-
+<nav>
     <div class="container">
+        <div class="nav-links">
+            <a href="#" data-page-target="paid" class="active"><i class="fas fa-crown"></i>付费版</a>
+            <a href="#" data-page-target="free"><i class="fas fa-gift"></i>公益系列</a>
+            <a href="#" data-page-target="group"><i class="fas fa-users"></i>官方群聊</a>
+            <a href="#" data-page-target="monitor"><i class="fas fa-chart-line"></i>数据监测</a>
+        </div>
+    </div>
+</nav>
 
-        <div id="page-paid" data-page class="active">
-            <header>
-                <h1>TX Script</h1>
-                <p class="subtitle">高级 Roblox 脚本</p>
-            </header>
+<div class="container">
 
-            <div class="stats-bar">
-                <div class="stat-big">
-                    <i class="fas fa-bolt stat-icon"></i>
-                    <div class="stat-number" id="exec-count">0+</div>
-                    <div class="stat-label">TX 被执行次数</div>
+    <div id="page-paid" data-page class="active">
+        <header>
+            <h1>TX Script</h1>
+            <p class="subtitle">高级 Roblox 脚本</p>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-big">
+                <i class="fas fa-bolt stat-icon"></i>
+                <div class="stat-number" id="exec-count">0+</div>
+                <div class="stat-label">TX 被执行次数</div>
+            </div>
+            <div class="stat-big">
+                <i class="fas fa-user stat-icon"></i>
+                <div class="stat-number" id="user-count">0</div>
+                <div class="stat-label">付费用户</div>
+            </div>
+            <div class="stat-big">
+                <i class="fas fa-check-circle stat-icon"></i>
+                <div class="stat-number" id="success-rate">0.0%</div>
+                <div class="stat-label">成功率</div>
+            </div>
+        </div>
+
+        <section>
+            <h2>亮点功能</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-plug feature-icon"></i>
+                    <div class="feature-title">全注入器支持</div>
+                    <div class="feature-desc">兼容Delta Krnl Zenith等双端 热门执行器</div>
                 </div>
-                <div class="stat-big">
-                    <i class="fas fa-user stat-icon"></i>
-                    <div class="stat-number" id="user-count">0</div>
-                    <div class="stat-label">付费用户</div>
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt feature-icon"></i>
+                    <div class="feature-title">安全保护</div>
+                    <div class="feature-desc">多层混淆 + 动态密钥白名单</div>
                 </div>
-                <div class="stat-big">
-                    <i class="fas fa-check-circle stat-icon"></i>
-                    <div class="stat-number" id="success-rate">0.0%</div>
-                    <div class="stat-label">成功率</div>
+                <div class="feature-item">
+                    <i class="fas fa-cloud feature-icon"></i>
+                    <div class="feature-title">实时云端同步</div>
+                    <div class="feature-desc">脚本云更新 白名单绑定设备跨账号使用</div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-gamepad feature-icon"></i>
+                    <div class="feature-title">服务器支持</div>
+                    <div class="feature-desc">功能支持 死铁轨 Doors 种植花园 森林中的99夜 最强战场 内脏与黑火药 兵工厂 战争大亨 等数十个热门服务器</div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-palette feature-icon"></i>
+                    <div class="feature-title">极简美观 UI</div>
+                    <div class="feature-desc">使用Redz Wind obsidian美观UI</div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-star feature-icon"></i>
+                    <div class="feature-title">为什么选择TX</div>
+                    <div class="feature-desc">持续更新 永不跑路 每个服务器功能都会认真对待 不会有功能垃圾的凑数服务器</div>
                 </div>
             </div>
+        </section>
 
-            <section>
-                <h2>亮点功能</h2>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <i class="fas fa-plug feature-icon"></i>
-                        <div class="feature-title">全注入器支持</div>
-                        <div class="feature-desc">兼容Delta Krnl Zenith等双端 热门执行器</div>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-shield-alt feature-icon"></i>
-                        <div class="feature-title">安全保护</div>
-                        <div class="feature-desc">多层混淆 + 动态密钥白名单</div>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-cloud feature-icon"></i>
-                        <div class="feature-title">实时云端同步</div>
-                        <div class="feature-desc">脚本云更新 白名单绑定设备跨账号使用</div>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-gamepad feature-icon"></i>
-                        <div class="feature-title">服务器支持</div>
-                        <div class="feature-desc">功能支持 死铁轨 Doors 种植花园 森林中的99夜 最强战场 内脏与黑火药 兵工厂 战争大亨 等数十个热门服务器</div>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-palette feature-icon"></i>
-                        <div class="feature-title">极简美观 UI</div>
-                        <div class="feature-desc">使用Redz Wind obsidian美观UI</div>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-star feature-icon"></i>
-                        <div class="feature-title">为什么选择TX</div>
-                        <div class="feature-desc">持续更新 永不跑路 每个服务器功能都会认真对待 不会有功能垃圾的凑数服务器</div>
-                    </div>
-                </div>
-            </section>
+        <section>
+            <h2>更新日志</h2>
+            <div class="changelog-container" id="changelog-list">
+                <div style="text-align:center;color:#666;padding:2rem 0;">正在加载更新日志</div>
+            </div>
+        </section>
 
-            <section>
-                <h2>更新日志</h2>
-                <div class="changelog-container" id="changelog-list">
-                    <div style="text-align:center;color:#666;padding:2rem 0;">正在加载更新日志</div>
-                </div>
-            </section>
-
-            <section class="pricing">
-                <h2>价格方案</h2>
-                <div class="price-main">￥20/永久</div>
-                <div style="color:#777;margin:1rem 0 .8rem;font-size:.95rem;">一次性支付 · 终身授权</div>
-                <p style="color:#777;margin:1rem 0 .8rem;font-size:.95rem;">支持微信 支付宝付款</p>
-                <button class="buy-now-btn" onclick="buyNow()"><i class="fas fa-shopping-cart"></i>立刻购买</button>
-                
-                <div class="purchase-link-box">
-                    <h3><i class="fas fa-link"></i> 购买链接</h3>
-                    <div class="link-text" id="purchase-link-text">buy.txscript.top</div>
-                    <button class="copy-btn" onclick="copyPurchaseLink()"><i class="fas fa-copy"></i>复制购买链接</button>
-                </div>
-            </section>
-        </div>
-
-        <div id="page-free" data-page>
-            <header>
-                <h1>公益系列</h1>
-                <p class="subtitle">免费 · 公益脚本</p>
-            </header>
-
-            <section>
-                <h2>TX公益系列</h2>
-                <div class="scripts-grid">
-                    <div class="script-card">
-                        <div class="script-title">TX V3免费版主脚本</div>
-                        <div class="script-code-box">TX = "TX Script"
-loadstring(Game:HttpGet("https://raw.githubusercontent.com/JsYb666/TX-Free/refs/heads/main/TX-V3.0"))()</div>
-                        <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
-                    </div>
-
-                    <div class="script-card">
-                        <div class="script-title">TX死铁轨刷债券V4</div>
-                        <div class="script-code-box">TX = "TX Script"
-Script = "TX自动刷债券V4"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/heads/main/Auto-Bond-V4"))()</div>
-                        <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
-                    </div>
-
-                    <div class="script-card">
-                        <div class="script-title">TX翻译器</div>
-                        <div class="script-code-box">TX = "TX Script"
-Script = "全自动翻译"
-loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/heads/main/Auto-language"))()</div>
-                        <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
-                    </div>
-
-                    <div class="script-card">
-                        <div class="script-title">待完善</div>
-                        <div class="script-code-box">loadstring(game:HttpGet("https://example.com/"))()</div>
-                        <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <div id="page-group" data-page>
-            <header>
-                <h1>官方群聊</h1>
-                <p class="subtitle">官方消息 · 限免活动</p>
-            </header>
-
-            <section>
-                <h2>加入我们的QQ群</h2>
-                <div class="scripts-grid">
-                    <div class="group-tab">
-                        <h3><i class="fas fa-users"></i> 主群</h3>
-                        <div style="font-size:1.5rem;font-family:monospace;margin:1.2rem 0 0.4rem;color:#fff;">766691084</div>
-                        <div class="group-link">点击链接加入群聊【「TX Script」[主群]】：https://qun.qq.com/universal-share/share?ac=1&authKey=hlfvt8ap14t6uRcVZAnpsDE7K6QHha9K6Zge%2Fv40ab4ZDtVSsxHY1SByx4ww6b%2BT&busi_data=eyJncm91cENvZGUiOiIxNjAzNjkxMTEiLCJ0b2tlbiI6Illnc2N4TkVFSzQyOUNyRzNMTUUwY2JoelJWVzVjK0hSQVRnNWdGK1hnY1A5RVlQTDdaTkFHaHg2c3ZtejJQdFciLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=LiqFPjd-4EoY5gAZBS7FuOhWLrD7O_GfN56aDLWuqPjzVZIM4UCE0h-zgy7YKlRYGxc4EhugZu5U99NR3vAW9w&svctype=4&tempid=h5_group_info</div>
-                        <button onclick="copyGroup('点击链接加入群聊【「TX Script」[主群]】：https://qun.qq.com/universal-share/share?ac=1&authKey=hlfvt8ap14t6uRcVZAnpsDE7K6QHha9K6Zge%2Fv40ab4ZDtVSsxHY1SByx4ww6b%2BT&busi_data=eyJncm91cENvZGUiOiIxNjAzNjkxMTEiLCJ0b2tlbiI6Illnc2N4TkVFSzQyOUNyRzNMTUUwY2JoelJWVzVjK0hSQVRnNWdGK1hnY1A5RVlQTDdaTkFHaHg2c3ZtejJQdFciLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=LiqFPjd-4EoY5gAZBS7FuOhWLrD7O_GfN56aDLWuqPjzVZIM4UCE0h-zgy7YKlRYGxc4EhugZu5U99NR3vAW9w&svctype=4&tempid=h5_group_info', this)"><i class="fas fa-copy"></i>复制加入链接</button>
-                    </div>
-
-                    <div class="group-tab">
-                        <h3><i class="fas fa-users"></i> 二群</h3>
-                        <div style="font-size:1.5rem;font-family:monospace;margin:1.2rem 0 0.4rem;color:#fff;">160369111</div>
-                        <div class="group-link">点击链接加入群聊【TX Script[二群]<$ǿĀD>：https://qun.qq.com/universal-share/share?ac=1&authKey=SAU359C0JYuJ5Hi7VYzawo8SINR%2BF6ypapNkMCsgo7RB0HHIqFngZCOspvnXhA3n&busi_data=eyJncm91cENvZGUiOiI3NjY2OTEwODQiLCJ0b2tlbiI6IlZYTmx5UVdsT0dZYnhyMXBJUGl4aENEckFNVW96c0d1Z2M4TldzMG5wWGVLZHBhOGd6ZWxaNzlnUGVxMFFqdVoiLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=wlFBEnu4SS9mnle3kNTnjfiwjIWZp1M6Wl8DRNvHcOUKbQD05z5qmSQ_yaVhFjfCX486OjWnwIaJxXREh7C6xw&svctype=4&tempid=h5_group_info</div>
-                        <button onclick="copyGroup('点击链接加入群聊【TX Script[二群]<$ǿĀD>：https://qun.qq.com/universal-share/share?ac=1&authKey=SAU359C0JYuJ5Hi7VYzawo8SINR%2BF6ypapNkMCsgo7RB0HHIqFngZCOspvnXhA3n&busi_data=eyJncm91cENvZGUiOiI3NjY2OTEwODQiLCJ0b2tlbiI6IlZYTmx5UVdsT0dZYnhyMXBJUGl4aENEckFNVW96c0d1Z2M4TldzMG5wWGVLZHBhOGd6ZWxaNzlnUGVxMFFqdVoiLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=wlFBEnu4SS9mnle3kNTnjfiwjIWZp1M6Wl8DRNvHcOUKbQD05z5qmSQ_yaVhFjfCX486OjWnwIaJxXREh7C6xw&svctype=4&tempid=h5_group_info', this)"><i class="fas fa-copy"></i>复制加入链接</button>
-                    </div>
-
-                    <div class="group-tab">
-                        <h3><i class="fas fa-users"></i> 三群</h3>
-                        <div style="font-size:1.5rem;font-family:monospace;margin:1.2rem 0 0.4rem;color:#fff;">603435457</div>
-                        <div class="group-link">点击链接加入群聊【TX Script[三群]<联邦><$ǿĀD>】：https://qun.qq.com/universal-share/share?ac=1&authKey=21IUjVcfONs3HAi0nZbeYa9R1oKl4K3T2o4nL1Nghk8MwE49IN0%2F4eWC8nxyEoX0&busi_data=eyJncm91cENvZGUiOiI2MDM0MzU0NTciLCJ0b2tlbiI6ImROeXYwNEx1R2RnWUFEQkNlWk5lcmpFVVRUcnFmYnpPSkZTYXdjc1dHQ1ovZFp1WDN3M0xuN0JSenpzY1I1cm8iLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=ggn9o3mLE50k7-4rAsnWVyGi3G5ECcyCXW72tek-XzgU0wbBYS0puY8lj56H1WDhZAWGNDOuAVrKDRuAiPXagg&svctype=4&tempid=h5_group_info</div>
-                        <button onclick="copyGroup('点击链接加入群聊【TX Script[三群]<联邦><$ǿĀD>】：https://qun.qq.com/universal-share/share?ac=1&authKey=21IUjVcfONs3HAi0nZbeYa9R1oKl4K3T2o4nL1Nghk8MwE49IN0%2F4eWC8nxyEoX0&busi_data=eyJncm91cENvZGUiOiI2MDM0MzU0NTciLCJ0b2tlbiI6ImROeXYwNEx1R2RnWUFEQkNlWk5lcmpFVVRUcnFmYnpPSkZTYXdjc1dHQ1ovZFp1WDN3M0xuN0JSenpzY1I1cm8iLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=ggn9o3mLE50k7-4rAsnWVyGi3G5ECcyCXW72tek-XzgU0wbBYS0puY8lj56H1WDhZAWGNDOuAVrKDRuAiPXagg&svctype=4&tempid=h5_group_info', this)"><i class="fas fa-copy"></i>复制加入链接</button>
-                    </div>
-
-                    <div class="group-tab">
-                        <h3><i class="fas fa-users"></i> 四群</h3>
-                        <div style="font-size:1.5rem;font-family:monospace;margin:1.2rem 0 0.4rem;color:#fff;">850870810</div>
-                        <div class="group-link">点击链接加入群聊【TX Script[四群]<$ǿĀD>】：https://qun.qq.com/universal-share/share?ac=1&authKey=fp8vH5In6puBLZGYADvBSmDpv1ZlewPyTKtzD8dyqWs90aUZyEL2inoNuqRdw30U&busi_data=eyJncm91cENvZGUiOiI4NTA4NzA4MTAiLCJ0b2tlbiI6IlcvZHo5bWMzUkFEakZrNll6T0ZpYVhCMERBNjBlU2ovaDllVDZwdDF5U1NnVFNhUkJ4NW5qV1UxNU13OVFRNlIiLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=dJyVECJIz9KfR9YzK56Ph4wxXxyERCBLjCKGG3jZCzUdE9HOlVUk7cUfmHl-IS8htMFal3TtJmHn-UanDGop7w&svctype=4&tempid=h5_group_info</div>
-                        <button onclick="copyGroup('点击链接加入群聊【TX Script[四群]<$ǿĀD>】：https://qun.qq.com/universal-share/share?ac=1&authKey=fp8vH5In6puBLZGYADvBSmDpv1ZlewPyTKtzD8dyqWs90aUZyEL2inoNuqRdw30U&busi_data=eyJncm91cENvZGUiOiI4NTA4NzA4MTAiLCJ0b2tlbiI6IlcvZHo5bWMzUkFEakZrNll6T0ZpYVhCMERBNjBlU2ovaDllVDZwdDF5U1NnVFNhUkJ4NW5qV1UxNU13OVFRNlIiLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=dJyVECJIz9KfR9YzK56Ph4wxXxyERCBLjCKGG3jZCzUdE9HOlVUk7cUfmHl-IS8htMFal3TtJmHn-UanDGop7w&svctype=4&tempid=h5_group_info', this)"><i class="fas fa-copy"></i>复制加入链接</button>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <footer>
-            <p>© 2026 TX . dev:退休.</p>
-        </footer>
+        <section class="pricing">
+            <h2>价格方案</h2>
+            <div class="price-main">￥20/永久</div>
+            <div style="color:#777;margin:1rem 0 .8rem;font-size:.95rem;">一次性支付 · 终身授权</div>
+            <p style="color:#777;margin:1rem 0 .8rem;font-size:.95rem;">支持微信 支付宝付款</p>
+            <button class="buy-now-btn" onclick="buyNow()"><i class="fas fa-shopping-cart"></i>立刻购买</button>
+            <div class="purchase-link-box">
+                <h3><i class="fas fa-link"></i> 购买链接</h3>
+                <div class="link-text" id="purchase-link-text">buy.txscript.top</div>
+                <button class="copy-btn" onclick="copyPurchaseLink()"><i class="fas fa-copy"></i>复制购买链接</button>
+            </div>
+        </section>
     </div>
 
-    <script>
-        async function loadChangelog() {
-            const container = document.getElementById('changelog-list');
-            try {
-                const res = await fetch('./changelogs.json', { cache: 'no-cache' });
-                if (!res.ok) throw new Error('文件访问失败');
-                const logs = await res.json();
-                if (!Array.isArray(logs) || logs.length === 0) {
-                    container.innerHTML = '<div style="text-align:center;color:#555;padding:2rem;">暂无更新日志</div>';
-                    return;
-                }
-                let html = '';
-                logs.forEach(log => {
-                    html += `
-                        <div class="changelog-item">
-                            <div class="changelog-date">${log.date || '未知日期'}</div>
-                            <div class="changelog-content">${log.content || '无内容'}</div>
-                        </div>
-                    `;
-                });
-                container.innerHTML = html;
-            } catch (err) {
-                container.innerHTML = '<div style="text-align:center;color:#777;padding:2rem;">加载更新日志失败</div>';
-            }
+    <div id="page-free" data-page>
+        <header>
+            <h1>公益系列</h1>
+            <p class="subtitle">免费 · 公益脚本</p>
+        </header>
+        <section>
+            <h2>TX公益系列</h2>
+            <div class="scripts-grid">
+                <div class="script-card">
+                    <div class="script-title">TX V3免费版主脚本</div>
+                    <div class="script-code-box">TX = "TX Script"
+loadstring(Game:HttpGet("https://raw.githubusercontent.com/JsYb666/TX-Free/refs/heads/main/TX-V3.0"))()</div>
+                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
+                </div>
+                <div class="script-card">
+                    <div class="script-title">TX死铁轨刷债券V4</div>
+                    <div class="script-code-box">TX = "TX Script"
+Script = "TX自动刷债券V4"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/heads/main/Auto-Bond-V4"))()</div>
+                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
+                </div>
+                <div class="script-card">
+                    <div class="script-title">TX翻译器</div>
+                    <div class="script-code-box">TX = "TX Script"
+Script = "全自动翻译"
+loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/heads/main/Auto-language"))()</div>
+                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
+                </div>
+                <div class="script-card">
+                    <div class="script-title">待完善</div>
+                    <div class="script-code-box">loadstring(game:HttpGet("https://example.com/"))()</div>
+                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="page-group" data-page>
+        <header>
+            <h1>官方群聊</h1>
+            <p class="subtitle">官方消息 · 限免活动</p>
+        </header>
+        <section>
+            <h2>加入我们的QQ群</h2>
+            <div class="scripts-grid">
+                <div class="group-tab">
+                    <h3><i class="fas fa-hashtag"></i>主群</h3>
+                    <div class="group-number">766691084</div>
+                    <div class="group-link">点击链接加入群聊【「TX Script」[主群]】：https://qun.qq.com/universal-share/share?ac=1&authKey=hlfvt8ap14t6uRcVZAnpsDE7K6QHha9K6Zge%2Fv40ab4ZDtVSsxHY1SByx4ww6b%2BT&busi_data=eyJncm91cENvZGUiOiIxNjAzNjkxMTEiLCJ0b2tlbiI6Illnc2N4TkVFSzQyOUNyRzNMTUUwY2JoelJWVzVjK0hSQVRnNWdGK1hnY1A5RVlQTDdaTkFHaHg2c3ZtejJQdFciLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=LiqFPjd-4EoY5gAZBS7FuOhWLrD7O_GfN56aDLWuqPjzVZIM4UCE0h-zgy7YKlRYGxc4EhugZu5U99NR3vAW9w&svctype=4&tempid=h5_group_info</div>
+                    <button onclick="copyGroup('点击链接加入群聊【「TX Script」[主群]】：https://qun.qq.com/universal-share/share?ac=1&authKey=hlfvt8ap14t6uRcVZAnpsDE7K6QHha9K6Zge%2Fv40ab4ZDtVSsxHY1SByx4ww6b%2BT&busi_data=eyJncm91cENvZGUiOiIxNjAzNjkxMTEiLCJ0b2tlbiI6Illnc2N4TkVFSzQyOUNyRzNMTUUwY2JoelJWVzVjK0hSQVRnNWdGK1hnY1A5RVlQTDdaTkFHaHg2c3ZtejJQdFciLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=LiqFPjd-4EoY5gAZBS7FuOhWLrD7O_GfN56aDLWuqPjzVZIM4UCE0h-zgy7YKlRYGxc4EhugZu5U99NR3vAW9w&svctype=4&tempid=h5_group_info', this)"><i class="fas fa-copy"></i>复制加入链接</button>
+                </div>
+                <div class="group-tab">
+                    <h3><i class="fas fa-hashtag"></i>二群</h3>
+                    <div class="group-number">160369111</div>
+                    <div class="group-link">点击链接加入群聊【TX Script[二群]<$ǿĀD>：https://qun.qq.com/universal-share/share?ac=1&authKey=SAU359C0JYuJ5Hi7VYzawo8SINR%2BF6ypapNkMCsgo7RB0HHIqFngZCOspvnXhA3n&busi_data=eyJncm91cENvZGUiOiI3NjY2OTEwODQiLCJ0b2tlbiI6IlZYTmx5UVdsT0dZYnhyMXBJUGl4aENEckFNVW96c0d1Z2M4TldzMG5wWGVLZHBhOGd6ZWxaNzlnUGVxMFFqdVoiLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=wlFBEnu4SS9mnle3kNTnjfiwjIWZp1M6Wl8DRNvHcOUKbQD05z5qmSQ_yaVhFjfCX486OjWnwIaJxXREh7C6xw&svctype=4&tempid=h5_group_info</div>
+                    <button onclick="copyGroup('点击链接加入群聊【TX Script[二群]<$ǿĀD>：https://qun.qq.com/universal-share/share?ac=1&authKey=SAU359C0JYuJ5Hi7VYzawo8SINR%2BF6ypapNkMCsgo7RB0HHIqFngZCOspvnXhA3n&busi_data=eyJncm91cENvZGUiOiI3NjY2OTEwODQiLCJ0b2tlbiI6IlZYTmx5UVdsT0dZYnhyMXBJUGl4aENEckFNVW96c0d1Z2M4TldzMG5wWGVLZHBhOGd6ZWxaNzlnUGVxMFFqdVoiLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=wlFBEnu4SS9mnle3kNTnjfiwjIWZp1M6Wl8DRNvHcOUKbQD05z5qmSQ_yaVhFjfCX486OjWnwIaJxXREh7C6xw&svctype=4&tempid=h5_group_info', this)"><i class="fas fa-copy"></i>复制加入链接</button>
+                </div>
+                <div class="group-tab">
+                    <h3><i class="fas fa-hashtag"></i>三群</h3>
+                    <div class="group-number">603435457</div>
+                    <div class="group-link">点击链接加入群聊【TX Script[三群]<联邦><$ǿĀD>】：https://qun.qq.com/universal-share/share?ac=1&authKey=21IUjVcfONs3HAi0nZbeYa9R1oKl4K3T2o4nL1Nghk8MwE49IN0%2F4eWC8nxyEoX0&busi_data=eyJncm91cENvZGUiOiI2MDM0MzU0NTciLCJ0b2tlbiI6ImROeXYwNEx1R2RnWUFEQkNlWk5lcmpFVVRUcnFmYnpPSkZTYXdjc1dHQ1ovZFp1WDN3M0xuN0JSenpzY1I1cm8iLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=ggn9o3mLE50k7-4rAsnWVyGi3G5ECcyCXW72tek-XzgU0wbBYS0puY8lj56H1WDhZAWGNDOuAVrKDRuAiPXagg&svctype=4&tempid=h5_group_info</div>
+                    <button onclick="copyGroup('点击链接加入群聊【TX Script[三群]<联邦><$ǿĀD>】：https://qun.qq.com/universal-share/share?ac=1&authKey=21IUjVcfONs3HAi0nZbeYa9R1oKl4K3T2o4nL1Nghk8MwE49IN0%2F4eWC8nxyEoX0&busi_data=eyJncm91cENvZGUiOiI2MDM0MzU0NTciLCJ0b2tlbiI6ImROeXYwNEx1R2RnWUFEQkNlWk5lcmpFVVRUcnFmYnpPSkZTYXdjc1dHQ1ovZFp1WDN3M0xuN0JSenpzY1I1cm8iLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=ggn9o3mLE50k7-4rAsnWVyGi3G5ECcyCXW72tek-XzgU0wbBYS0puY8lj56H1WDhZAWGNDOuAVrKDRuAiPXagg&svctype=4&tempid=h5_group_info', this)"><i class="fas fa-copy"></i>复制加入链接</button>
+                </div>
+                <div class="group-tab">
+                    <h3><i class="fas fa-hashtag"></i>四群</h3>
+                    <div class="group-number">850870810</div>
+                    <div class="group-link">点击链接加入群聊【TX Script[四群]<$ǿĀD>】：https://qun.qq.com/universal-share/share?ac=1&authKey=fp8vH5In6puBLZGYADvBSmDpv1ZlewPyTKtzD8dyqWs90aUZyEL2inoNuqRdw30U&busi_data=eyJncm91cENvZGUiOiI4NTA4NzA4MTAiLCJ0b2tlbiI6IlcvZHo5bWMzUkFEakZrNll6T0ZpYVhCMERBNjBlU2ovaDllVDZwdDF5U1NnVFNhUkJ4NW5qV1UxNU13OVFRNlIiLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=dJyVECJIz9KfR9YzK56Ph4wxXxyERCBLjCKGG3jZCzUdE9HOlVUk7cUfmHl-IS8htMFal3TtJmHn-UanDGop7w&svctype=4&tempid=h5_group_info</div>
+                    <button onclick="copyGroup('点击链接加入群聊【TX Script[四群]<$ǿĀD>】：https://qun.qq.com/universal-share/share?ac=1&authKey=fp8vH5In6puBLZGYADvBSmDpv1ZlewPyTKtzD8dyqWs90aUZyEL2inoNuqRdw30U&busi_data=eyJncm91cENvZGUiOiI4NTA4NzA4MTAiLCJ0b2tlbiI6IlcvZHo5bWMzUkFEakZrNll6T0ZpYVhCMERBNjBlU2ovaDllVDZwdDF5U1NnVFNhUkJ4NW5qV1UxNU13OVFRNlIiLCJ1aW4iOiIzNjU2OTA4NzUxIn0%3D&data=dJyVECJIz9KfR9YzK56Ph4wxXxyERCBLjCKGG3jZCzUdE9HOlVUk7cUfmHl-IS8htMFal3TtJmHn-UanDGop7w&svctype=4&tempid=h5_group_info', this)"><i class="fas fa-copy"></i>复制加入链接</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="page-monitor" data-page>
+        <div class="monitor-header">
+            <h1>TX Script</h1>
+            <p class="subtitle">// 数据监测中心</p>
+        </div>
+
+        <div class="mon-topbar">
+            <div class="mon-topbar-left">
+                <div class="topbar-item">
+                    <i class="fas fa-clock"></i>
+                    <span id="mon-clock">--:--:--</span>
+                </div>
+                <div class="topbar-item">
+                    <i class="fas fa-database"></i>
+                    <span id="mon-endpoint">webhook.txscript.top</span>
+                </div>
+                <div class="topbar-item" id="mon-ping-item">
+                    <i class="fas fa-wave-square"></i>
+                    <span id="mon-ping">— ms</span>
+                </div>
+            </div>
+            <div class="mon-topbar-right">
+                <div class="period-tabs" id="period-tabs">
+                    <div class="period-tab active" data-period="1h">1H</div>
+                    <div class="period-tab" data-period="24h">24H</div>
+                    <div class="period-tab" data-period="7d">7D</div>
+                    <div class="period-tab" data-period="30d">30D</div>
+                    <div class="period-tab" data-period="all">ALL</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mon-error" id="mon-error">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span id="mon-error-msg">API 连接失败，数据加载中...</span>
+        </div>
+
+        <div class="mon-cards">
+
+            <div class="mon-card">
+                <div class="mc-label"><i class="fas fa-bolt"></i>EXEC COUNT</div>
+                <div class="mc-value loading" id="mon-exec">加载中...</div>
+                <div class="mc-sub" id="mon-exec-sub">总执行次数</div>
+                <div class="mini-chart" id="chart-exec"></div>
+                <div class="refresh-row"><div class="refresh-dot"></div><span id="mon-exec-updated">等待数据...</span></div>
+            </div>
+
+            <div class="mon-card">
+                <div class="mc-label"><i class="fas fa-users"></i>UNIQUE USERS</div>
+                <div class="mc-value loading" id="mon-users">加载中...</div>
+                <div class="mc-sub" id="mon-users-sub">用户总数</div>
+                <div class="mini-chart" id="chart-users"></div>
+                <div class="refresh-row"><div class="refresh-dot"></div><span id="mon-users-updated">等待数据...</span></div>
+            </div>
+
+            <div class="mon-card">
+                <div class="mc-label"><i class="fas fa-server"></i>SERVER STATUS</div>
+                <div class="status-row">
+                    <div class="status-dot" id="status-dot"></div>
+                    <span id="status-text" style="font-family:'JetBrains Mono',monospace;font-size:1rem;">CHECKING...</span>
+                </div>
+                <div class="mc-sub" id="mon-status-sub" style="margin-top:0.5rem;">连接检测中</div>
+                <div class="uptime-bar-wrap">
+                    <div class="uptime-bar-labels">
+                        <span>响应时间</span>
+                        <span id="uptime-label">—</span>
+                    </div>
+                    <div class="uptime-bar-track">
+                        <div class="uptime-bar-fill" id="uptime-bar"></div>
+                    </div>
+                </div>
+                <div class="refresh-row" style="margin-top:0.9rem;"><div class="refresh-dot"></div><span id="mon-status-updated">检测中...</span></div>
+            </div>
+        </div>
+
+        <div class="mon-chart-section">
+            <div class="mon-section-label"><i class="fas fa-chart-bar"></i>HOURLY DISTRIBUTION</div>
+            <div id="chart-hourly" style="height:130px;display:flex;align-items:flex-end;gap:3px;overflow:hidden;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:#333;margin:auto;">加载中...</span>
+            </div>
+            <div id="chart-hourly-labels" style="display:flex;gap:3px;margin-top:4px;overflow:hidden;"></div>
+        </div>
+
+        <div class="mon-log-section">
+            <div class="mon-log-header">
+                <div class="mon-log-header-left">
+                    <i class="fas fa-terminal"></i>RECENT EXECUTIONS
+                </div>
+                <div class="live-badge">LIVE</div>
+            </div>
+            <div class="mon-log-body" id="mon-log-body">
+                <div class="log-row">
+                    <span class="log-time">--:--:--</span>
+                    <span class="log-user">—</span>
+                    <span class="log-msg">等待数据...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mon-action">
+            <p class="mon-action-note">// 查看完整后台数据、用户查询、排行榜</p>
+            <a href="https://webhook.txscript.top" target="_blank" class="mon-enter-btn">
+                <span class="btn-icon"><i class="fas fa-arrow-up-right-from-square"></i></span>
+                <span>
+                    进入数据中心
+                    <span class="btn-sub">webhook.txscript.top</span>
+                </span>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 TX . dev:退休.</p>
+    </footer>
+</div>
+
+<script>
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = link.getAttribute('data-page-target');
+        document.querySelectorAll('[data-page]').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + target).classList.add('active');
+        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+        link.classList.add('active');
+        if (target === 'monitor') monitorStart();
+    });
+});
+
+async function loadChangelog() {
+    const container = document.getElementById('changelog-list');
+    try {
+        const res = await fetch('./changelogs.json', { cache: 'no-cache' });
+        if (!res.ok) throw new Error();
+        const logs = await res.json();
+        if (!Array.isArray(logs) || logs.length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:#555;padding:2rem;">暂无更新日志</div>';
+            return;
         }
+        container.innerHTML = logs.map(log => `
+            <div class="changelog-item">
+                <div class="changelog-date">${log.date || '未知日期'}</div>
+                <div class="changelog-content">${log.content || '无内容'}</div>
+            </div>
+        `).join('');
+    } catch {
+        container.innerHTML = '<div style="text-align:center;color:#777;padding:2rem;">加载更新日志失败</div>';
+    }
+}
 
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', e => {
-                e.preventDefault();
-                const target = link.getAttribute('data-page-target');
-                document.querySelectorAll('[data-page]').forEach(p => p.classList.remove('active'));
-                document.getElementById(`page-${target}`).classList.add('active');
-                document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-                link.classList.add('active');
-            });
-        });
+function animateNumber(el, target, duration = 2200, isPercent = false) {
+    const startTime = Date.now();
+    const step = () => {
+        const progress = Math.min((Date.now() - startTime) / duration, 1);
+        const value = isPercent ? (progress * target).toFixed(1) : Math.floor(progress * target);
+        el.textContent = isPercent ? value + '%' : value.toLocaleString() + '+';
+        if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+}
 
-        function animateNumber(el, target, duration = 2200, isPercent = false) {
-            const startTime = Date.now();
-            const step = () => {
-                const progress = Math.min((Date.now() - startTime) / duration, 1);
-                const value = isPercent ? (progress * target).toFixed(1) : Math.floor(progress * target);
-                el.textContent = isPercent ? value + '%' : value.toLocaleString() + '+';
-                if (progress < 1) requestAnimationFrame(step);
-            };
-            requestAnimationFrame(step);
+function copyScript(text) {
+    navigator.clipboard.writeText(text.trim()).then(() => {
+        const toast = document.createElement('div');
+        toast.textContent = '已复制脚本';
+        toast.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:14px 28px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.6);z-index:9999;font-size:1.02rem;';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2800);
+    }).catch(() => alert('复制失败，请手动复制：\n' + text));
+}
+
+function copyGroup(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> 已复制';
+        setTimeout(() => btn.innerHTML = orig, 2000);
+    });
+}
+
+function copyPurchaseLink() {
+    const link = document.getElementById('purchase-link-text').textContent;
+    navigator.clipboard.writeText(link).then(() => {
+        const toast = document.createElement('div');
+        toast.textContent = '已复制购买链接';
+        toast.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:14px 28px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.6);z-index:9999;font-size:1.02rem;';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2800);
+    });
+}
+
+function buyNow() { window.location.href = 'https://qy.71ywl.com/item/1cs1po'; }
+
+const API_BASE = 'https://webhook.txscript.top';
+let monitorTimer = null;
+let monitorStarted = false;
+let currentPeriod = '1h';
+
+const history = { exec: [], users: [] };
+
+function nowStr() {
+    const d = new Date();
+    const p = n => String(n).padStart(2, '0');
+    return `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+}
+
+function clockTick() {
+    document.getElementById('mon-clock').textContent = nowStr();
+}
+
+function renderMiniLine(containerId, data) {
+    const wrap = document.getElementById(containerId);
+    if (!wrap || data.length < 2) return;
+    const W = wrap.clientWidth || 300, H = 42;
+    const min = Math.min(...data), max = Math.max(...data);
+    const range = max - min || 1;
+    const xs = data.map((_, i) => (i / (data.length - 1)) * W);
+    const ys = data.map(v => H - 4 - ((v - min) / range) * (H - 10));
+    const pts = xs.map((x, i) => `${x},${ys[i]}`).join(' ');
+    const area = `M${xs[0]},${ys[0]} ` + xs.slice(1).map((x, i) => `L${x},${ys[i+1]}`).join(' ')
+               + ` L${W},${H} L0,${H} Z`;
+    wrap.innerHTML = `
+        <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="grad_${containerId}" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#666" stop-opacity="0.2"/>
+                    <stop offset="100%" stop-color="#666" stop-opacity="0"/>
+                </linearGradient>
+            </defs>
+            <path d="${area}" fill="url(#grad_${containerId})"/>
+            <polyline points="${pts}" fill="none" stroke="#555" stroke-width="1.5"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`;
+}
+
+function renderHourlyChart(data) {
+    const wrap = document.getElementById('chart-hourly');
+    const labelWrap = document.getElementById('chart-hourly-labels');
+    if (!wrap || !Array.isArray(data) || data.length === 0) {
+        wrap.innerHTML = '<span style="font-family:\'JetBrains Mono\',monospace;font-size:0.75rem;color:#333;margin:auto;">暂无数据</span>';
+        return;
+    }
+    const maxC = Math.max(...data.map(d => d.c), 1);
+    const H = 130;
+    wrap.innerHTML = data.map(d => {
+        const pct = Math.max((d.c / maxC) * 100, 2);
+        return `<div title="${d.h}:00 — ${d.c}次" style="
+            flex:1; min-width:0; height:${pct}%; background:#2a2a2a;
+            border-radius:2px 2px 0 0; transition:background 0.2s; cursor:default;
+            position:relative;" onmouseenter="this.style.background='#444'"
+            onmouseleave="this.style.background='#2a2a2a'"></div>`;
+    }).join('');
+    labelWrap.innerHTML = data.map(d =>
+        `<div style="flex:1;min-width:0;font-family:'JetBrains Mono',monospace;
+            font-size:0.6rem;color:#2f2f2f;text-align:center;overflow:hidden;">${d.h}</div>`
+    ).join('');
+}
+
+function renderLogs(logs) {
+    const body = document.getElementById('mon-log-body');
+    if (!Array.isArray(logs) || logs.length === 0) return;
+    body.innerHTML = logs.slice(0, 15).map(l => {
+        let b = {};
+        try { b = JSON.parse(l.body); } catch {}
+        const user = b.roblox_name || l.username || 'unknown';
+        const d = new Date(l.time);
+        const p = n => String(n).padStart(2, '0');
+        const timeStr = `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+        const place = b.place_id ? `place:${b.place_id}` : (b.game_name || 'TX Script execution');
+        return `<div class="log-row">
+            <span class="log-time">${timeStr}</span>
+            <span class="log-user">${user}</span>
+            <span class="log-msg">${place}</span>
+        </div>`;
+    }).join('');
+}
+
+async function refreshMonitor() {
+    const t0 = Date.now();
+    let apiOk = false;
+
+    try {
+        const statsRes = await fetch(`${API_BASE}/api/stats?period=${currentPeriod}`);
+        const ping = Date.now() - t0;
+        document.getElementById('mon-ping').textContent = ping + ' ms';
+
+        if (statsRes.ok) {
+            apiOk = true;
+            const stats = await statsRes.json();
+
+            const execEl = document.getElementById('mon-exec');
+            execEl.classList.remove('loading');
+            execEl.textContent = (stats.total || 0).toLocaleString();
+            document.getElementById('mon-exec-sub').textContent = '脚本执行次数';
+            document.getElementById('mon-exec-updated').textContent = '更新于 ' + nowStr();
+            history.exec.push(stats.total || 0);
+            if (history.exec.length > 20) history.exec.shift();
+            renderMiniLine('chart-exec', history.exec);
+
+            const usersEl = document.getElementById('mon-users');
+            usersEl.classList.remove('loading');
+            usersEl.textContent = (stats.unique || 0).toLocaleString();
+            document.getElementById('mon-users-sub').textContent = '用户总数';
+            document.getElementById('mon-users-updated').textContent = '更新于 ' + nowStr();
+            history.users.push(stats.unique || 0);
+            if (history.users.length > 20) history.users.shift();
+            renderMiniLine('chart-users', history.users);
+
+            const dot = document.getElementById('status-dot');
+            dot.className = 'status-dot online';
+            document.getElementById('status-text').textContent = 'OPERATIONAL';
+            document.getElementById('mon-status-sub').textContent = '所有服务正常运行';
+            document.getElementById('mon-status-updated').textContent = '更新于 ' + nowStr();
+
+            const barPct = Math.max(0, Math.min(100, 100 - (ping / 500) * 100));
+            document.getElementById('uptime-label').textContent = ping + ' ms';
+            document.getElementById('uptime-bar').style.width = barPct + '%';
+
+            document.getElementById('mon-error').style.display = 'none';
         }
+    } catch (err) {
+        apiOk = false;
+    }
 
-        function copyScript(text) {
-            navigator.clipboard.writeText(text.trim()).then(() => {
-                const toast = document.createElement('div');
-                toast.textContent = '已复制脚本';
-                toast.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:14px 28px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.6);z-index:9999;font-size:1.02rem;';
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 2800);
-            }).catch(() => {
-                alert('复制失败，请手动复制：\n' + text);
-            });
-        }
+    if (!apiOk) {
+        document.getElementById('status-dot').className = 'status-dot error';
+        document.getElementById('status-text').textContent = 'UNREACHABLE';
+        document.getElementById('mon-status-sub').textContent = 'API 连接失败';
+        document.getElementById('mon-status-updated').textContent = '检测于 ' + nowStr();
+        document.getElementById('mon-error').style.display = 'block';
+        document.getElementById('mon-error-msg').textContent = '无法连接到 webhook.txscript.top，请检查网络或 CORS 配置';
+    }
 
-        function copyGroup(text, btn) {
-            navigator.clipboard.writeText(text).then(() => {
-                const orig = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-check"></i> 已复制';
-                setTimeout(() => btn.innerHTML = orig, 2000);
-            });
-        }
+    try {
+        const chartRes = await fetch(`${API_BASE}/api/chart?period=${currentPeriod}`);
+        if (chartRes.ok) renderHourlyChart(await chartRes.json());
+    } catch {}
 
-        function copyPurchaseLink() {
-            const link = document.getElementById('purchase-link-text').textContent;
-            navigator.clipboard.writeText(link).then(() => {
-                const toast = document.createElement('div');
-                toast.textContent = '已复制购买链接';
-                toast.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:14px 28px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.6);z-index:9999;font-size:1.02rem;';
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 2800);
-            });
-        }
+    try {
+        const logsRes = await fetch(`${API_BASE}/api/recent?period=${currentPeriod}`);
+        if (logsRes.ok) renderLogs(await logsRes.json());
+    } catch {}
+}
 
-        function buyNow() {
-            window.location.href = "https://qy.71ywl.com/item/1cs1po";
-        }
+document.getElementById('period-tabs').addEventListener('click', e => {
+    const tab = e.target.closest('.period-tab');
+    if (!tab) return;
+    document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentPeriod = tab.dataset.period;
+    refreshMonitor();
+});
 
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                animateNumber(document.getElementById('exec-count'), 1126018, 2200);
-                animateNumber(document.getElementById('user-count'), 342, 2200);
-                animateNumber(document.getElementById('success-rate'), 99.9, 2200, true);
-            }, 400);
-            loadChangelog();
-        });
-    </script>
+function monitorStart() {
+    if (monitorStarted) return;
+    monitorStarted = true;
+    setInterval(clockTick, 1000);
+    clockTick();
+    refreshMonitor();
+    monitorTimer = setInterval(refreshMonitor, 30000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        animateNumber(document.getElementById('exec-count'), 1126018, 2200);
+        animateNumber(document.getElementById('user-count'), 342, 2200);
+        animateNumber(document.getElementById('success-rate'), 99.9, 2200, true);
+    }, 400);
+    loadChangelog();
+});
+</script>
 </body>
 </html>
