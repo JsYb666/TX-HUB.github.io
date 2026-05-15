@@ -162,6 +162,26 @@
             color: var(--text-dim);
             margin-bottom: 1rem;
         }
+
+        /* 新增：更新日志样式 */
+        .changelog-item {
+            padding: 1.1rem 0;
+            border-bottom: 1px solid #1c1c1c;
+        }
+        .changelog-item:last-child {
+            border-bottom: none;
+        }
+        .changelog-date {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .changelog-content {
+            color: #bbb;
+            line-height: 1.65;
+        }
+
         .changelog-container {
             max-height: 520px; overflow-y: auto; background: #080808;
             border: 1px solid #1a1a1a; border-radius: 12px; padding: 1.4rem;
@@ -187,7 +207,7 @@
             color: var(--text-dim); border-top: 1px solid var(--border);
         }
 
-        /* 数据监测中心 - 优化后布局 */
+        /* 数据监测中心 */
         .monitor-header { text-align: center; padding: 4rem 0 2rem; }
         .monitor-header h1 { font-size: 3.4rem; font-weight: 700; letter-spacing: -1px; }
         .monitor-header .subtitle { font-size: 1rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
@@ -343,11 +363,6 @@ Script = "全自动翻译"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/heads/main/Auto-language"))()</div>
                     <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
                 </div>
-                <div class="script-card">
-                    <div class="script-title">待完善</div>
-                    <div class="script-code-box">loadstring(game:HttpGet("https://example.com/"))()</div>
-                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
-                </div>
             </div>
         </section>
     </div>
@@ -361,26 +376,45 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
             <h2>加入我们的QQ群</h2>
             <div class="scripts-grid">
                 <div class="group-tab">
-                    <h3><i class="fas fa-hashtag"></i>主群</h3>
+                    <h3><i class="fas fa-hashtag"></i> 主群</h3>
                     <div class="group-number">766691084</div>
-                    <div class="group-link">点击链接加入群聊【「TX Script」[主群]】：https://qm.qq.com/q/1FxGqDXcla', this)"><i class="fas fa-copy"></i>复制加入链接</button>
+                    <div class="group-link">
+                        点击链接加入群聊【「TX Script」[主群]】：<br>
+                        https://qm.qq.com/q/1FxGqDXcla
+                    </div>
+                    <button onclick="copyGroup('https://qm.qq.com/q/1FxGqDXcla', this)">
+                        <i class="fas fa-copy"></i> 复制加入链接
+                    </button>
                 </div>
+
                 <div class="group-tab">
-                    <h3><i class="fas fa-hashtag"></i>临时主群</h3>
+                    <h3><i class="fas fa-hashtag"></i> 临时主群</h3>
                     <div class="group-number">160369111</div>
-                    <div class="group-link">点击链接加入群聊【TX Script[临时主群]<$ǿĀD>】：https://qm.qq.com/q/ggSmP4fiTu</div>
-                    <button onclick="copyGroup('点击链接加入群聊【TX Script[临时主群]<$ǿĀD>】：https://qm.qq.com/q/ggSmP4fiTu', this)"><i class="fas fa-copy"></i>复制加入链接</button>
+                    <div class="group-link">
+                        点击链接加入群聊【TX Script[临时主群]】：<br>
+                        https://qm.qq.com/q/ggSmP4fiTu
+                    </div>
+                    <button onclick="copyGroup('https://qm.qq.com/q/ggSmP4fiTu', this)">
+                        <i class="fas fa-copy"></i> 复制加入链接
+                    </button>
                 </div>
+
                 <div class="group-tab">
-                    <h3><i class="fas fa-hashtag"></i>三群(暂时关闭)</h3>
-                    <div class="group-number">603435457</div>
+                    <h3><i class="fas fa-hashtag"></i> 三群 (暂时关闭)</h3>
+                    <div class="group-number">。。。</div>
                     <div class="group-link">暂时关闭</div>
-                    <button onclick="copyGroup('暂时关闭', this)"><i class="fas fa-copy"></i>复制加入链接</button>
+                    <button onclick="copyGroup('暂时关闭', this)">
+                        <i class="fas fa-copy"></i> 复制加入链接
+                    </button>
                 </div>
+
                 <div class="group-tab">
-                    <h3><i class="fas fa-hashtag"></i>四群(暂时关闭)</h3>
-                    <div class="group-number">850870810</div>
-                    <div class="group-link">暂时关闭', this)"><i class="fas fa-copy"></i>复制加入链接</button>
+                    <h3><i class="fas fa-hashtag"></i> 四群 (暂时关闭)</h3>
+                    <div class="group-number">。。。</div>
+                    <div class="group-link">暂时关闭</div>
+                    <button onclick="copyGroup('暂时关闭', this)">
+                        <i class="fas fa-copy"></i> 复制加入链接
+                    </button>
                 </div>
             </div>
         </section>
@@ -489,7 +523,9 @@ function copyPurchaseLink() {
     });
 }
 
-function buyNow() { window.location.href = 'https://qy.71ywl.com/item/1cs1po'; }
+function buyNow() { 
+    window.open('https://qy.71ywl.com/item/1cs1po', '_blank');
+}
 
 let monitorStarted = false;
 
