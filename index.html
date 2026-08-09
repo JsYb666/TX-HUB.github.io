@@ -28,7 +28,7 @@
             content: '';
             position: fixed;
             inset: 0;
-            background-image: linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px);
             background-size: 50px 50px;
             pointer-events: none;
             z-index: -1;
@@ -37,29 +37,46 @@
         nav {
             position: sticky;
             top: 0;
-            background: rgba(10,10,10,0.96);
+            background: rgba(10,10,10,1);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
             z-index: 100;
             padding: 1.3rem 0;
         }
+        nav .container {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 0 0.4rem;
+        }
         .nav-links {
-            display: flex;
-            justify-content: center;
-            gap: 2.8rem;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.25rem;
         }
         .nav-links a {
             color: var(--text-dim);
             text-decoration: none;
             font-weight: 500;
-            font-size: 1.1rem;
-            padding: 0.65rem 1.6rem;
+            font-size: 0.7rem;
+            line-height: 1.2;
+            padding: 0.5rem 0.05rem;
             border-radius: 6px;
             transition: all 0.3s;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 0.35rem;
+            white-space: nowrap;
+            text-align: center;
+            min-width: 0;
+        }
+        .nav-links a.nav-wrap {
+            white-space: normal;
+        }
+        .nav-links a i {
+            font-size: 1.05rem;
+            line-height: 1;
         }
         .nav-links a:hover, .nav-links a.active {
             color: var(--text);
@@ -235,9 +252,226 @@
         .mon-enter-btn:hover {
             background: #222; border-color: #666; transform: translateY(-2px);
         }
+        .logos-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 320px));
+            justify-content: center;
+            gap: 1.6rem;
+        }
+        .logo-card {
+            position: relative;
+            background: var(--gray);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            min-height: 0;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .logo-card:hover {
+            border-color: #3a3a3a;
+            transform: translateY(-3px);
+        }
+        .logo-placeholder {
+            color: #555;
+            text-align: center;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+        .logo-placeholder i {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 0.6rem;
+            color: #3a3a3a;
+        }
+        .logo-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 1.2rem;
+            background: var(--gray);
+        }
+        .team-developer-section {
+            padding-top: 2rem;
+        }
+        .team-developer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: fit-content;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 1.4rem;
+            background: linear-gradient(135deg, rgba(34, 34, 40, 0.1), rgba(12, 12, 14, 1));
+            -webkit-backdrop-filter: blur(18px) saturate(150%);
+            backdrop-filter: blur(18px) saturate(150%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            box-shadow:
+                0 12px 34px rgba(0, 0, 0, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.01);
+        }
+        .dev-avatar-box {
+            position: relative;
+            width: 110px;
+            max-width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--gray);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dev-avatar-placeholder {
+            color: #555;
+            text-align: center;
+            font-size: 0.78rem;
+            line-height: 1.6;
+        }
+        .dev-avatar-placeholder i {
+            display: block;
+            font-size: 1.8rem;
+            margin-bottom: 0.4rem;
+            color: #4a4a4a;
+        }
+        .dev-avatar {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: var(--gray);
+        }
+        .dev-intro-box {
+            position: relative;
+            width: fit-content;
+            max-width: 100%;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(44, 44, 50, 0.42), rgba(14, 14, 16, 0.38));
+            -webkit-backdrop-filter: blur(20px) saturate(160%);
+            backdrop-filter: blur(20px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            text-align: center;
+            color: var(--text);
+            box-shadow:
+                0 12px 30px rgba(0, 0, 0, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+        .dev-nickname {
+            margin-top: 0.4rem;
+            color: var(--text-dim);
+            font-size: 0.82rem;
+        }
+        .dev-intro-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 12%;
+            right: 12%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            pointer-events: none;
+        }
+        .feature-item,
+        .script-card,
+        .group-tab,
+        .changelog-container,
+        .logo-card,
+        .dev-avatar-box,
+        .purchase-link-box,
+        .mon-topbar {
+            background: linear-gradient(135deg, rgba(34, 34, 40, 0.1), rgba(12, 12, 14, 1));
+            -webkit-backdrop-filter: blur(18px) saturate(150%);
+            backdrop-filter: blur(18px) saturate(150%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow:
+                0 12px 34px rgba(0, 0, 0, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.01);
+        }
+        .ops-section {
+            padding-top: 2rem;
+        }
+        .ops-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.4rem;
+            width: 100%;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        .ops-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.4rem;
+            background: linear-gradient(135deg, rgba(34, 34, 40, 0.1), rgba(12, 12, 14, 1));
+            -webkit-backdrop-filter: blur(18px) saturate(150%);
+            backdrop-filter: blur(18px) saturate(150%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            box-shadow:
+                0 12px 34px rgba(0, 0, 0, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.01);
+        }
+        .ops-avatar-box {
+            position: relative;
+            width: 110px;
+            max-width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(12, 12, 14, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ops-avatar-placeholder {
+            color: #666;
+            text-align: center;
+            font-size: 0.78rem;
+            line-height: 1.6;
+        }
+        .ops-avatar-placeholder i {
+            display: block;
+            font-size: 1.8rem;
+            margin-bottom: 0.4rem;
+            color: #4a4a4a;
+        }
+        .ops-avatar {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .ops-intro {
+            text-align: center;
+            color: var(--text);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .ops-intro .ops-name {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+        .ops-intro .ops-role {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
         @media (max-width: 768px) {
             h1 { font-size: 2.6rem; }
-            .nav-links { gap: 1.5rem; }
             .features-grid, .scripts-grid { grid-template-columns: 1fr; }
             .monitor-header { padding: 3rem 0 1.5rem; }
         }
@@ -248,17 +482,19 @@
 <nav>
     <div class="container">
         <div class="nav-links">
-            <a href="#" data-page-target="paid" class="active"><i class="fas fa-crown"></i>付费版</a>
+            <a href="#" data-page-target="txscript" class="active nav-wrap"><i class="fas fa-file-code"></i>TX Script</a>
+            <a href="#" data-page-target="paid"><i class="fas fa-crown"></i>付费版</a>
             <a href="#" data-page-target="free"><i class="fas fa-gift"></i>公益系列</a>
             <a href="#" data-page-target="group"><i class="fas fa-users"></i>官方群聊</a>
             <a href="#" data-page-target="monitor"><i class="fas fa-chart-line"></i>数据监测</a>
+            <a href="#" data-page-target="team"><i class="fas fa-people-group"></i>TX Team</a>
         </div>
     </div>
 </nav>
 
 <div class="container">
 
-    <div id="page-paid" data-page class="active">
+    <div id="page-txscript" data-page class="active">
         <header>
             <h1>TX Script</h1>
             <p class="subtitle">高级的Roblox脚本</p>
@@ -275,11 +511,40 @@
                 <div class="stat-label">付费用户</div>
             </div>
             <div class="stat-big">
+                <i class="fas fa-user-plus stat-icon"></i>
+                <div class="stat-number" id="free-user-count">0</div>
+                <div class="stat-label">免费用户</div>
+            </div>
+            <div class="stat-big">
                 <i class="fas fa-check-circle stat-icon"></i>
                 <div class="stat-number" id="success-rate">0.0%</div>
                 <div class="stat-label">成功率</div>
             </div>
         </div>
+        <section>
+            <h2>LOGO</h2>
+            <div class="logos-grid">
+                <div class="logo-card">
+                    <div class="logo-placeholder">
+                        <i class="fas fa-image"></i>
+                        LOGO 1<br>
+                        <span></span>
+                    </div>
+                    <img class="logo-img" src="https://raw.githubusercontent.com/JsYb666/TUIXUI_qun-809771141/refs/heads/TUIXUI/TX-Logo.png" alt="TX Logo" onerror="this.hidden = true">
+                </div>
+                <div class="logo-card">
+                    <div class="logo-placeholder">
+                        <i class="fas fa-image"></i>
+                        LOGO 2<br>
+                        <span>待填图片</span>
+                    </div>
+                    <img class="logo-img" src="https://raw.githubusercontent.com/JsYb666/TUIXUI_qun-809771141/refs/heads/TUIXUI/TX-Premium-logo.png" alt="TX Premium Logo" onerror="this.hidden = true">
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="page-paid" data-page>
         <section>
             <h2>亮点功能</h2>
             <div class="features-grid">
@@ -430,6 +695,14 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
                         <i class="fas fa-copy"></i> 复制加入链接
                     </button>
                 </div>
+                <div class="group-tab">
+                    <h3><i class="fas fa-hashtag"></i> 神秘禁区</h3>
+                    <div class="group-number">287240944</div>
+                    <div class="group-link">点击链接加入群聊【TX Script脚本交流群】：https://qm.qq.com/q/TTdlFPVawk</div>
+                    <button onclick="copyGroup('点击链接加入群聊【TX Script脚本交流群】：https://qm.qq.com/q/TTdlFPVawk', this)">
+                        <i class="fas fa-copy"></i> 复制加入链接
+                    </button>
+                </div>
             </div>
         </section>
     </div>
@@ -458,6 +731,81 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
         </div>
     </div>
 
+    <div id="page-team" data-page>
+        <section class="team-developer-section">
+            <h2>开发者</h2>
+            <div class="team-developer">
+                <div class="dev-avatar-box">
+                    <div class="dev-avatar-placeholder">
+                        <i class="fas fa-user"></i>
+                        <span>待获取 QQ 头像</span>
+                    </div>
+                    <img id="developer-avatar" class="dev-avatar" alt="开发者 QQ 头像" onerror="this.hidden = true">
+                </div>
+                <div class="dev-intro-box">
+                    <p>TX Script唯一开发者<br>TX Premium付费版维护者<br>TX Free公益系列维护者</p>
+                </div>
+            </div>
+        </section>
+        <section class="ops-section">
+            <h2>运营</h2>
+            <div class="ops-grid">
+                <div class="ops-member">
+                    <div class="ops-avatar-box">
+                        <div class="ops-avatar-placeholder">
+                            <i class="fas fa-user"></i>
+                            <span>待获取头像</span>
+                        </div>
+                        <img class="ops-avatar" alt="协管成员" onerror="this.hidden = true">
+                    </div>
+                    <div class="ops-intro">
+                        <div class="ops-name">协管成员</div>
+                        <div class="ops-role">待补充</div>
+                    </div>
+                </div>
+                <div class="ops-member">
+                    <div class="ops-avatar-box">
+                        <div class="ops-avatar-placeholder">
+                            <i class="fas fa-user"></i>
+                            <span>待获取头像</span>
+                        </div>
+                        <img class="ops-avatar" alt="协管成员" onerror="this.hidden = true">
+                    </div>
+                    <div class="ops-intro">
+                        <div class="ops-name">协管成员</div>
+                        <div class="ops-role">待补充</div>
+                    </div>
+                </div>
+                <div class="ops-member">
+                    <div class="ops-avatar-box">
+                        <div class="ops-avatar-placeholder">
+                            <i class="fas fa-user"></i>
+                            <span>待获取头像</span>
+                        </div>
+                        <img class="ops-avatar" alt="协管成员" onerror="this.hidden = true">
+                    </div>
+                    <div class="ops-intro">
+                        <div class="ops-name">协管成员</div>
+                        <div class="ops-role">待补充</div>
+                    </div>
+                </div>
+                <div class="ops-member">
+                    <div class="ops-avatar-box">
+                        <div class="ops-avatar-placeholder">
+                            <i class="fas fa-user"></i>
+                            <span>待获取头像</span>
+                        </div>
+                        <img class="ops-avatar" alt="协管成员" onerror="this.hidden = true">
+                    </div>
+                    <div class="ops-intro">
+                        <div class="ops-name">协管成员</div>
+                        <div class="ops-role">待补充</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
     <footer>
         <p>© 2026 TX . dev:退休.</p>
     </footer>
@@ -468,8 +816,10 @@ document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', e => {
         e.preventDefault();
         const target = link.getAttribute('data-page-target');
+        const page = document.getElementById('page-' + target);
+        if (!page) return;
         document.querySelectorAll('[data-page]').forEach(p => p.classList.remove('active'));
-        document.getElementById('page-' + target).classList.add('active');
+        page.classList.add('active');
         document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
         link.classList.add('active');
         if (target === 'monitor') monitorStart();
@@ -537,6 +887,36 @@ function copyPurchaseLink() {
     });
 }
 
+const DEVELOPER_QQ = "3656908751";
+
+function loadDeveloperAvatar() {
+    const img = document.getElementById('developer-avatar');
+    if (!img) return;
+    img.hidden = false;
+    img.src = `https://q1.qlogo.cn/g?b=qq&nk=${DEVELOPER_QQ}&s=640`;
+}
+
+const OPS_QQS = ["3755292577", "554712935", "2724664886", "3469075920", ""];
+
+function loadOpsAvatars() {
+    document.querySelectorAll('.ops-avatar').forEach((img, i) => {
+        const qq = OPS_QQS[i];
+        if (!qq) return;
+        img.hidden = false;
+        img.src = `https://q1.qlogo.cn/g?b=qq&nk=${qq}&s=640`;
+    });
+}
+
+
+async function loadQqNicknames() {
+    apply(document.getElementById('developer-nickname'), DEVELOPER_QQ, '开发者');
+    const nameEls = document.querySelectorAll('.ops-name');
+    document.querySelectorAll('.ops-avatar').forEach((img, i) => {
+        const qq = OPS_QQS[i];
+        if (qq && nameEls[i]) apply(nameEls[i], qq, '协管成员 ' + (i + 1));
+    });
+}
+
 function buyNow() { 
     window.open('https://qy.71ywl.com/item/1cs1po', '_blank');
 }
@@ -577,9 +957,13 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         animateNumber(document.getElementById('exec-count'), 1304319, 2200);
         animateNumber(document.getElementById('user-count'), 385, 2200);
+        animateNumber(document.getElementById('free-user-count'), 38453, 2200);
         animateNumber(document.getElementById('success-rate'), 98.9, 2200, true);
     }, 400);
     loadChangelog();
+    loadDeveloperAvatar();
+    loadOpsAvatars();
+    loadQqNicknames();
 });
 </script>
 </body>
