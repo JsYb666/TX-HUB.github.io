@@ -4,476 +4,250 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TX Script</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/Wp8j63c3/TX-Logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --black: #000000;
-            --gray: #111111;
-            --light-gray: #1f1f1f;
-            --text: #e8e8e8;
-            --text-dim: #888888;
-            --border: #222222;
+            color-scheme: dark;
+            --black: #070707;
+            --text: #efefef;
+            --text-dim: #a0a0a0;
+            --accent: #c4c4c4;
+            --border: rgba(255,255,255,.12);
+            --glass: linear-gradient(140deg, rgba(255,255,255,.055), rgba(255,255,255,.012) 65%), rgba(12,12,12,.65);
+            --glass-shadow: inset 0 1px rgba(255,255,255,.055), 0 12px 32px rgba(0,0,0,.18);
+            --radius: 14px;
+            --ease-out: cubic-bezier(.22,1,.36,1);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: var(--black);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            overflow-x: hidden;
-            position: relative;
-        }
+        *, *::before, *::after { box-sizing: border-box; }
+        * { margin: 0; padding: 0; }
+        html { scrollbar-gutter: stable; scroll-padding-top: 96px; }
+        body { min-width: 280px; min-height: 100svh; position: relative; isolation: isolate; background: var(--black); color: var(--text); font: 16px/1.65 'Inter', -apple-system, BlinkMacSystemFont, 'Microsoft YaHei', sans-serif; -webkit-font-smoothing: antialiased; }
         body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: linear-gradient(rgba(255,255,255,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: -1;
+            content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background:
+                radial-gradient(ellipse at 48% 0, rgba(255,255,255,.085), transparent 58%),
+                linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+            background-size: auto, 64px 64px, 64px 64px;
         }
-        .container { max-width: 1180px; margin: 0 auto; padding: 0 1.8rem; }
-        nav {
-            position: sticky;
-            top: 0;
-            background: rgba(10,10,10,1);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            z-index: 100;
-            padding: 1.3rem 0;
-        }
-        nav .container {
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: 0 0.4rem;
-        }
-        .nav-links {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 0.25rem;
-        }
-        .nav-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.7rem;
-            line-height: 1.2;
-            padding: 0.5rem 0.05rem;
-            border-radius: 6px;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.35rem;
-            white-space: nowrap;
-            text-align: center;
-            min-width: 0;
-        }
-        .nav-links a.nav-wrap {
-            white-space: normal;
-        }
-        .nav-links a i {
-            font-size: 1.05rem;
-            line-height: 1;
-        }
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--text);
-            background: var(--light-gray);
-        }
-        [data-page] { display: none; }
+        ::selection { color: #080808; background: #eee; }
+        [hidden] { display: none !important; }
+        button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+        button { font-family: inherit; }
+        a { color: inherit; }
+        :focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+        .container { max-width: 1160px; width: 100%; margin: 0 auto; padding-inline: 28px; }
+        nav { position: sticky; top: 0; z-index: 100; padding: 10px 0; background: rgba(7,7,7,.82); border-bottom: 1px solid rgba(255,255,255,.09); transition: border-color .25s, box-shadow .25s; }
+        nav.is-scrolled { border-bottom-color: #ffffff24; box-shadow: 0 8px 28px #0005; }
+        nav .container { padding-inline: 20px; }
+        .nav-links { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 8px; }
+        .nav-links a { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 7px; min-width: 0; min-height: 54px; padding: 8px 2px; border: 1px solid transparent; border-radius: 9px; color: #999; text-decoration: none; white-space: nowrap; font-size: .76rem; line-height: 1.2; font-weight: 500; transition: color .2s, background .2s, border-color .2s, transform .15s; }
+        .nav-links a i { font-size: 1rem; }
+        .nav-links a > i { display: grid; place-items: center; width: 20px; height: 20px; color: var(--accent); }
+        .nav-links a.active > i { color: #111; }
+        .nav-links a.active { color: #111; background: #efefef; border-color: #efefef; box-shadow: inset 0 1px #fff8; }
+        .nav-links a:active { transform: scale(.97); }
+        .nav-links a:focus-visible { outline-offset: -3px; }
+        [data-page] { display: none; min-height: calc(100svh - 220px); }
         [data-page].active { display: block; }
-        header { text-align: center; padding: 5.5rem 0 3.5rem; }
-        h1 { font-size: 3.4rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
-        .subtitle { font-size: 1.15rem; color: var(--text-dim); }
-        .stats-bar { display: flex; justify-content: center; gap: 4rem; margin: 3.5rem 0; flex-wrap: wrap; }
-        .stat-big { text-align: center; }
-        .stat-icon { font-size: 2.8rem; color: #666; margin-bottom: 12px; }
-        .stat-number { font-size: 3.6rem; font-weight: 800; color: var(--text); }
-        .stat-label { font-size: 1rem; color: var(--text-dim); margin-top: 0.6rem; }
-        section { padding: 4rem 0; }
-        h2 {
-            font-size: 2rem; font-weight: 600; color: var(--text);
-            text-align: center; margin-bottom: 2.8rem; position: relative;
+        header { padding: 64px 0 36px; text-align: center; }
+        h1 { font-size: 3.4rem; line-height: 1.2; font-weight: 700; letter-spacing: -.04em; }
+        .brand-hero { position: relative; isolation: isolate; padding-block: 72px 42px; }
+        .brand-heading { display: flex; justify-content: center; align-items: center; gap: 22px; min-width: 0; }
+        .brand-hero h1 { font-size: clamp(2.8rem,6.5vw,4.8rem); line-height: 1.1; letter-spacing: -.055em; }
+        .hero-mark { position: relative; display: grid; place-items: center; width: 68px; height: 68px; flex: none; overflow: hidden; border: 1px solid #ffffff24; border-radius: 17px; background: #000; color: #eee; }
+        .hero-mark--premium { color: #111; background: #fff; border-color: #ffffff88; }
+        .hero-mark > i { font-size: 1.4rem; }
+        .hero-mark img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .hero-mark:not(.hero-mark--premium) img { transform: translateY(4.5%); }
+        .subtitle { margin-top: 12px; color: var(--text-dim); font-size: 1.05rem; }
+        section { padding-block: 36px; }
+        h2 { font-size: 1.5rem; line-height: 1.4; font-weight: 600; text-align: center; margin-bottom: 30px; }
+        .section-icon { margin-right: 10px; color: var(--accent); font-size: .78em; vertical-align: .04em; }
+        .title-icon { margin-right: 12px; color: var(--accent); font-size: .6em; vertical-align: .08em; }
+        .stats-bar { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 20px; margin: 24px 0 32px; }
+        .stat-big { min-width: 0; text-align: center; }
+        .stat-icon { color: var(--accent); font-size: 1.8rem; margin-bottom: 14px; }
+        .stat-number { font-size: clamp(1.55rem, 3.6vw, 3rem); line-height: 1.25; font-weight: 700; letter-spacing: -.045em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .stat-label { font-size: .86rem; color: var(--text-dim); margin-top: 10px; }
+        .features-grid, .scripts-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
+        .feature-item, .script-card, .group-tab, .changelog-container, .logo-card,
+        .team-developer, .ops-member, .mon-topbar, .pricing {
+            min-width: 0; background: var(--glass); border: 1px solid var(--border);
+            border-radius: var(--radius); box-shadow: var(--glass-shadow);
         }
-        h2::after {
-            content: ''; position: absolute; bottom: -8px; left: 50%;
-            transform: translateX(-50%); width: 90px; height: 1px; background: #444;
+        .feature-item, .script-card, .group-tab, .logo-card, .ops-member { transition: border-color .2s, box-shadow .2s, transform .2s; }
+        .feature-item, .script-card, .group-tab, .paid-changelog, .pricing, .ops-member { position: relative; }
+        .paid-changelog, .pricing { transition: border-color .25s, box-shadow .25s; }
+        .script-card:focus-within, .group-tab:focus-within, .paid-changelog:focus-within, .pricing:focus-within { border-color: #ffffff45; }
+        .feature-item, .script-card, .group-tab { padding: 25px; }
+        .feature-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; border: 1px solid #ffffff1a; border-radius: 10px; background: #ffffff06; color: var(--accent); font-size: 1.1rem; transition: background .25s, color .25s, border-color .25s, transform .25s; }
+        .feature-title { font-weight: 600; font-size: .96rem; margin-bottom: 9px; }
+        .feature-desc { color: var(--text-dim); font-size: .88rem; line-height: 1.8; overflow-wrap: anywhere; }
+        .script-card { display: flex; flex-direction: column; }
+        .script-title { display: flex; align-items: center; gap: 10px; font-size: .95rem; font-weight: 600; padding-bottom: 16px; border-bottom: 1px solid #ffffff12; }
+        .script-icon { display: grid; place-items: center; width: 30px; height: 30px; flex: none; border: 1px solid #ffffff18; border-radius: 8px; background: #ffffff06; color: var(--accent); font-size: .85rem; }
+        .script-code-box { flex: 1; min-width: 0; margin-top: 18px; padding: 15px; border: 1px solid #ffffff0d; border-radius: 9px; background: #0004; color: #aaa; font: .76rem/1.85 'JetBrains Mono', Consolas, monospace; white-space: pre-wrap; overflow-wrap: anywhere; overflow-x: auto; }
+        .script-card:has(button:disabled) { border-style: dashed; background: rgba(12,12,12,.45); box-shadow: none; }
+        .copy-btn, .group-tab button, .changelog-retry {
+            display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+            min-height: 46px; width: 100%; margin-top: 18px; padding: 12px 16px;
+            border: 1px solid rgba(255,255,255,.2); border-radius: 9px;
+            color: #e0e0e0; background: #0b0b0b; font-size: .86rem; font-weight: 500; cursor: pointer;
+            transition: background .2s, color .2s, border-color .2s, box-shadow .2s, transform .15s;
         }
-        .features-grid, .scripts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.6rem;
+        .copy-btn, .group-tab button { color: #161616; background: linear-gradient(180deg,#e9e9e9,#cfcfcf); border-color: #e0e0e0; box-shadow: inset 0 1px #ffffff66; }
+        .copy-btn i, .group-tab button i, .buy-now-btn i, .mon-enter-btn i { transition: transform .2s; }
+        .copy-btn.is-copied, .group-tab button.is-copied { background: #fff; color: #111; border-color: #fff; }
+        button:disabled { opacity: .4; cursor: default; box-shadow: none; }
+        button:not(:disabled):active, .mon-enter-btn:active { transform: scale(.98); }
+        .buy-now-btn, .mon-enter-btn {
+            position: relative; overflow: hidden; isolation: isolate;
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            min-height: 50px; padding: 14px 28px; border: 1px solid #efefef; border-radius: 9px;
+            background: linear-gradient(180deg,#fafafa,#e3e3e3); color: #111; font-size: .95rem; font-weight: 600;
+            cursor: pointer; text-decoration: none; box-shadow: inset 0 1px #fff8, 0 6px 18px #0003;
+            transition: background .2s, color .2s, border-color .2s, box-shadow .2s, transform .15s;
         }
-        .feature-item, .script-card, .group-tab {
-            background: var(--gray);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.6rem;
-            transition: all 0.3s;
+        .buy-now-btn::after, .mon-enter-btn::after { content: ''; position: absolute; top: -50%; bottom: -50%; left: 0; width: 35%; background: linear-gradient(100deg, transparent, #ffffff40, transparent); transform: translateX(-160%) skewX(-18deg); opacity: 0; pointer-events: none; }
+        .buy-now-btn:focus-visible::after, .mon-enter-btn:focus-visible::after { animation: button-sheen .7s ease; }
+        .group-tab { display: flex; flex-direction: column; }
+        .group-tab h3 { display: flex; align-items: center; gap: 9px; color: #ccc; font-weight: 500; font-size: .9rem; }
+        .group-tab h3 i { color: var(--accent); }
+        .group-number { font: 600 clamp(1.4rem, 2.2vw, 1.95rem)/1.4 'JetBrains Mono', monospace; letter-spacing: -.05em; padding-block: 20px; margin-bottom: 16px; border-bottom: 1px solid #ffffff12; }
+        .group-link { flex: 1; color: var(--text-dim); font-size: .84rem; line-height: 1.8; overflow-wrap: anywhere; }
+        .paid-details { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(320px,.85fr); gap: 26px; align-items: stretch; padding: 18px 0 40px; }
+        .paid-details > section { min-width: 0; padding: 28px; }
+        .paid-details h2 { font-size: 1.25rem; margin-bottom: 24px; }
+        .paid-changelog { display: flex; flex-direction: column; background: var(--glass); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--glass-shadow); }
+        .paid-changelog .changelog-container { flex: 1; height: 0; min-height: 0; max-height: none; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+        .paid-changelog .changelog-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 160px; height: 100%; padding: 24px 0; }
+        .changelog-container { max-height: 540px; overflow-y: auto; padding: 4px 26px; scrollbar-width: thin; scrollbar-color: #444 transparent; }
+        .changelog-item { padding: 23px 0; border-bottom: 1px solid #ffffff12; }
+        .changelog-item:last-child { border-bottom: 0; }
+        .changelog-date { color: #999; font: .78rem 'JetBrains Mono', monospace; margin-bottom: 10px; }
+        .changelog-content { color: #ccc; font-size: .88rem; line-height: 1.85; white-space: pre-line; overflow-wrap: anywhere; }
+        .changelog-state { padding: 34px 0; color: #999; font-size: .88rem; text-align: center; }
+        .changelog-state i { display: block; color: #777; font-size: 1.3rem; margin-bottom: 14px; }
+        .changelog-retry { display: flex; width: auto; min-width: 120px; margin: 20px auto 0; }
+        .pricing { text-align: center; }
+        .pricing h2 { margin-bottom: 24px; font-size: 1.25rem; }
+        .price-main { font-size: 3.2rem; font-weight: 650; line-height: 1.2; letter-spacing: -.055em; margin-bottom: 18px; }
+        .pricing-note { color: #999; margin: 9px 0; font-size: .88rem; }
+        .pricing-note i { margin-right: 8px; color: var(--accent); }
+        .buy-now-btn { width: 100%; margin-top: 22px; }
+        .purchase-link-box { margin-top: 26px; padding-top: 24px; border-top: 1px solid #ffffff16; text-align: left; }
+        .purchase-link-box h3 { font-weight: 500; font-size: .88rem; margin-bottom: 14px; }
+        .link-text { padding: 13px 14px; border: 1px solid #ffffff12; border-radius: 9px; background: #0004; color: #bbb; font: .82rem/1.6 'JetBrains Mono', monospace; overflow-wrap: anywhere; }
+        .monitor-header { text-align: center; padding: 64px 0 36px; }
+        .mon-topbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 20px 24px; color: #aaa; font: .8rem/1.5 'JetBrains Mono', monospace; }
+        .mon-topbar i { margin-right: 6px; }
+        .mon-action { text-align: center; padding: 36px 0 60px; }
+        .mon-action-note { color: #999; font-size: .86rem; margin-bottom: 24px; }
+        .logos-grid { display: grid; grid-template-columns: repeat(2, minmax(0,320px)); justify-content: center; gap: 20px; }
+        .logo-card { position: relative; aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; }
+        .logo-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 0; background: #101010; }
+        .logo-placeholder, .dev-avatar-placeholder, .ops-avatar-placeholder { color: #999; text-align: center; font-size: .78rem; padding: 10px; }
+        .logo-placeholder i, .dev-avatar-placeholder i, .ops-avatar-placeholder i { display: block; font-size: 1.7rem; margin-bottom: 10px; color: #777; }
+        .team-developer-section { padding-top: 36px; }
+        .team-developer { display: flex; flex-direction: column; align-items: center; gap: 24px; width: fit-content; max-width: 100%; margin: 0 auto; padding: 28px; }
+        .dev-avatar-box, .ops-avatar-box { position: relative; display: grid; place-items: center; width: 100px; max-width: 100%; aspect-ratio: 1; overflow: hidden; border: 1px solid #ffffff1a; border-radius: 12px; background: #131313; }
+        .dev-avatar, .ops-avatar { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .dev-intro-box { text-align: center; color: #ccc; font-size: .88rem; line-height: 2; }
+        .intro-icon { display: inline-block; width: 18px; margin-right: 9px; color: #aaa; font-size: .86em; }
+        .ops-section { padding-top: 24px; }
+        .ops-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 20px; max-width: 960px; margin: 0 auto; }
+        .ops-member { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 26px 16px; }
+        .ops-intro { text-align: center; font-size: .88rem; }
+        .ops-name { font-weight: 600; }
+        .ops-role { color: #999; font-size: .78rem; margin-top: 4px; }
+        footer { text-align: center; margin-top: 32px; padding: 30px 0; border-top: 1px solid #ffffff12; color: #888; font-size: .8rem; }
+        .toast { position: fixed; left: 50%; bottom: max(24px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 200; width: max-content; max-width: calc(100% - 32px); padding: 13px 22px; border: 1px solid #eee; border-radius: 10px; background: #eee; color: #111; font-size: .86rem; text-align: center; box-shadow: 0 8px 30px #0006; pointer-events: none; }
+        .focus-glow { box-shadow: 0 0 0 1px #ffffff14, 0 0 26px #ffffff24, 0 0 54px #ffffff0a; }
+        [data-page].active > header, [data-page].active > .monitor-header { animation: content-enter .6s var(--ease-out) backwards; }
+        .reveal-enter { animation: content-enter .55s var(--ease-out) backwards; animation-delay: var(--reveal-delay,0ms); }
+        @keyframes content-enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes button-sheen { from { opacity: 0; transform: translateX(-160%) skewX(-18deg); } 25% { opacity: 1; } to { opacity: 0; transform: translateX(430%) skewX(-18deg); } }
+        @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+            .brand-hero h1 { background: linear-gradient(180deg, #fff 20%, #bcbcbc); -webkit-background-clip: text; background-clip: text; color: transparent; }
         }
-        .feature-item:hover, .script-card:hover, .group-tab:hover {
-            border-color: #3a3a3a;
-            transform: translateY(-3px);
+        @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+            nav { -webkit-backdrop-filter: blur(22px); backdrop-filter: blur(22px); }
+            .feature-item, .script-card, .group-tab, .changelog-container, .paid-changelog, .team-developer, .ops-member, .mon-topbar, .pricing { -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+            .paid-changelog .changelog-container { -webkit-backdrop-filter: none; backdrop-filter: none; }
         }
-        .feature-icon {
-            font-size: 1.4rem;
-            color: #555;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px; height: 40px;
-            background: #161616;
-            border: 1px solid #2a2a2a;
-            border-radius: 8px;
+        @media (hover: hover) {
+            .nav-links a:hover:not(.active) { color: #eee; border-color: #ffffff1a; background: #ffffff08; }
+            .copy-btn:hover:not(:disabled), .group-tab button:hover { color: #eee; background: #111; border-color: #ddd; }
+            .changelog-retry:hover { color: #111; background: #eee; border-color: #eee; }
+            .copy-btn:hover:not(:disabled) i, .group-tab button:hover i { transform: translateY(-1px); }
+            .buy-now-btn:hover, .mon-enter-btn:hover { background: #111; color: #eee; border-color: #eee; }
+            .mon-enter-btn:hover i { transform: translate(2px,-2px); }
+            .buy-now-btn:hover::after, .mon-enter-btn:hover::after { animation: button-sheen .7s ease; }
+            .feature-item:hover, .script-card:hover, .group-tab:hover, .logo-card:hover, .ops-member:hover { border-color: #ffffff38; transform: translateY(-2px); box-shadow: inset 0 1px #ffffff12, 0 16px 30px #0003; }
+            .paid-changelog:hover, .pricing:hover { border-color: #ffffff38; }
+            .feature-item:hover .feature-icon { background: #efefef; color: #111; border-color: #eee; transform: translateY(-2px); }
         }
-        .feature-title { font-weight: 600; font-size: 1rem; margin-bottom: 0.55rem; }
-        .feature-desc { font-size: 0.88rem; color: #666; line-height: 1.7; }
-        .script-title {
-            font-weight: 600;
-            font-size: 0.95rem;
-            padding-bottom: 0.9rem;
-            border-bottom: 1px solid #1c1c1c;
-            margin-bottom: 1rem;
-        }
-        .script-code-box {
-            background: #0a0a0a;
-            border: 1px solid #1a1a1a;
-            border-radius: 8px;
-            padding: 14px 16px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.82rem;
-            color: #888;
-            white-space: pre-wrap;
-            word-break: break-all;
-            margin-top: 1rem;
-            overflow-x: auto;
-            line-height: 1.75;
-        }
-        .copy-btn, .group-tab button {
-            margin-top: 1rem; width: 100%; padding: 0.85rem;
-            background: #0f0f0f; color: #888;
-            border: 1px solid #1f1f1f; border-radius: 8px;
-            font-size: 0.88rem; font-weight: 500; cursor: pointer;
-            transition: all 0.25s;
-        }
-        .copy-btn:hover, .group-tab button:hover {
-            background: #161616;
-            color: var(--text);
-        }
-        .group-number {
-            font-size: 2rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 600;
-            letter-spacing: -1px;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #1c1c1c;
-        }
-        .group-link {
-            word-break: break-all;
-            font-size: 0.88rem;
-            line-height: 1.45;
-            color: var(--text-dim);
-            margin-bottom: 1rem;
-        }
-
-        /* 新增：更新日志样式 */
-        .changelog-item {
-            padding: 1.1rem 0;
-            border-bottom: 1px solid #1c1c1c;
-        }
-        .changelog-item:last-child {
-            border-bottom: none;
-        }
-        .changelog-date {
-            color: #666;
-            font-size: 0.85rem;
-            margin-bottom: 0.5rem;
-            font-family: 'JetBrains Mono', monospace;
-        }
-        .changelog-content {
-            color: #bbb;
-            line-height: 1.65;
-        }
-
-        .changelog-container {
-            max-height: 520px; overflow-y: auto; background: #080808;
-            border: 1px solid #1a1a1a; border-radius: 12px; padding: 1.4rem;
-        }
-        .pricing { text-align: center; padding: 4.5rem 0; }
-        .price-main { font-size: 4.2rem; font-weight: 800; color: var(--text); }
-        .buy-now-btn {
-            background: var(--light-gray); color: var(--text); border: 1px solid var(--border);
-            padding: 1.3rem 4rem; font-size: 1.2rem; font-weight: 600; border-radius: 10px;
-            cursor: pointer; margin: 1.5rem auto 0; display: block; width: fit-content;
-        }
-        .purchase-link-box {
-            margin: 2.5rem auto 0; max-width: 520px; background: var(--gray);
-            border: 1px solid var(--border); border-radius: 12px; padding: 1.8rem; text-align: center;
-        }
-        .link-text {
-            background: #0d0d0d; border: 1px solid var(--border); border-radius: 8px;
-            padding: 14px 16px; font-family: 'Consolas', monospace; font-size: 0.95rem;
-            color: #ccc; word-break: break-all; margin-bottom: 1.2rem; text-align: left;
-        }
-        footer {
-            text-align: center; padding: 4.5rem 0 2.5rem;
-            color: var(--text-dim); border-top: 1px solid var(--border);
-        }
-
-        /* 数据监测中心 */
-        .monitor-header { text-align: center; padding: 4rem 0 2rem; }
-        .monitor-header h1 { font-size: 3.4rem; font-weight: 700; letter-spacing: -1px; }
-        .monitor-header .subtitle { font-size: 1rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
-        .mon-topbar {
-            background: var(--gray); border: 1px solid var(--border);
-            border-radius: 10px; padding: 1rem 1.6rem;
-            font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
-            color: var(--text-dim); display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 2rem;
-        }
-        .mon-action {
-            text-align: center; padding: 1.5rem 0 4rem;
-        }
-        .mon-action-note {
-            font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
-            color: #555; margin-bottom: 1.6rem;
-        }
-        .mon-enter-btn {
-            display: inline-flex; align-items: center; gap: 12px;
-            padding: 1.1rem 3.2rem; background: var(--light-gray);
-            color: var(--text); border: 1px solid #2d2d2d;
-            border-radius: 10px; font-size: 1.05rem; font-weight: 600;
-            cursor: pointer; text-decoration: none; transition: all 0.3s;
-        }
-        .mon-enter-btn:hover {
-            background: #222; border-color: #666; transform: translateY(-2px);
-        }
-        .logos-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 320px));
-            justify-content: center;
-            gap: 1.6rem;
-        }
-        .logo-card {
-            position: relative;
-            background: var(--gray);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            min-height: 0;
-            aspect-ratio: 1 / 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-        .logo-card:hover {
-            border-color: #3a3a3a;
-            transform: translateY(-3px);
-        }
-        .logo-placeholder {
-            color: #555;
-            text-align: center;
-            font-size: 0.9rem;
-            line-height: 1.8;
-        }
-        .logo-placeholder i {
-            display: block;
-            font-size: 2rem;
-            margin-bottom: 0.6rem;
-            color: #3a3a3a;
-        }
-        .logo-img {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            padding: 1.2rem;
-            background: var(--gray);
-        }
-        .team-developer-section {
-            padding-top: 2rem;
-        }
-        .team-developer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-            width: fit-content;
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 1.4rem;
-            background: linear-gradient(135deg, rgba(34, 34, 40, 0.1), rgba(12, 12, 14, 1));
-            -webkit-backdrop-filter: blur(18px) saturate(150%);
-            backdrop-filter: blur(18px) saturate(150%);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 16px;
-            box-shadow:
-                0 12px 34px rgba(0, 0, 0, 0.35),
-                inset 0 1px 0 rgba(255, 255, 255, 0.01);
-        }
-        .dev-avatar-box {
-            position: relative;
-            width: 110px;
-            max-width: 100%;
-            aspect-ratio: 1 / 1;
-            border-radius: 12px;
-            overflow: hidden;
-            background: var(--gray);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .dev-avatar-placeholder {
-            color: #555;
-            text-align: center;
-            font-size: 0.78rem;
-            line-height: 1.6;
-        }
-        .dev-avatar-placeholder i {
-            display: block;
-            font-size: 1.8rem;
-            margin-bottom: 0.4rem;
-            color: #4a4a4a;
-        }
-        .dev-avatar {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            background: var(--gray);
-        }
-        .dev-intro-box {
-            position: relative;
-            width: fit-content;
-            max-width: 100%;
-            overflow: hidden;
-            background: linear-gradient(135deg, rgba(44, 44, 50, 0.42), rgba(14, 14, 16, 0.38));
-            -webkit-backdrop-filter: blur(20px) saturate(160%);
-            backdrop-filter: blur(20px) saturate(160%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 1rem 1.2rem;
-            text-align: center;
-            color: var(--text);
-            box-shadow:
-                0 12px 30px rgba(0, 0, 0, 0.35),
-                inset 0 1px 0 rgba(255, 255, 255, 0.04);
-        }
-        .dev-nickname {
-            margin-top: 0.4rem;
-            color: var(--text-dim);
-            font-size: 0.82rem;
-        }
-        .dev-intro-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 12%;
-            right: 12%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            pointer-events: none;
-        }
-        .feature-item,
-        .script-card,
-        .group-tab,
-        .changelog-container,
-        .logo-card,
-        .dev-avatar-box,
-        .purchase-link-box,
-        .mon-topbar {
-            background: linear-gradient(135deg, rgba(34, 34, 40, 0.1), rgba(12, 12, 14, 1));
-            -webkit-backdrop-filter: blur(18px) saturate(150%);
-            backdrop-filter: blur(18px) saturate(150%);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow:
-                0 12px 34px rgba(0, 0, 0, 0.35),
-                inset 0 1px 0 rgba(255, 255, 255, 0.01);
-        }
-        .ops-section {
-            padding-top: 2rem;
-        }
-        .ops-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.4rem;
-            width: 100%;
-            max-width: 960px;
-            margin: 0 auto;
-        }
-        .ops-member {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-            padding: 1.4rem;
-            background: linear-gradient(135deg, rgba(34, 34, 40, 0.1), rgba(12, 12, 14, 1));
-            -webkit-backdrop-filter: blur(18px) saturate(150%);
-            backdrop-filter: blur(18px) saturate(150%);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 16px;
-            box-shadow:
-                0 12px 34px rgba(0, 0, 0, 0.35),
-                inset 0 1px 0 rgba(255, 255, 255, 0.01);
-        }
-        .ops-avatar-box {
-            position: relative;
-            width: 110px;
-            max-width: 100%;
-            aspect-ratio: 1 / 1;
-            border-radius: 12px;
-            overflow: hidden;
-            background: rgba(12, 12, 14, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .ops-avatar-placeholder {
-            color: #666;
-            text-align: center;
-            font-size: 0.78rem;
-            line-height: 1.6;
-        }
-        .ops-avatar-placeholder i {
-            display: block;
-            font-size: 1.8rem;
-            margin-bottom: 0.4rem;
-            color: #4a4a4a;
-        }
-        .ops-avatar {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .ops-intro {
-            text-align: center;
-            color: var(--text);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-        .ops-intro .ops-name {
-            font-weight: 600;
-            margin-bottom: 0.2rem;
-        }
-        .ops-intro .ops-role {
-            color: var(--text-dim);
-            font-size: 0.8rem;
+        @media (max-width: 900px) {
+            .features-grid, .scripts-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+            .paid-details { grid-template-columns: minmax(0,1fr); gap: 32px; }
+            .pricing { width: 100%; max-width: 520px; justify-self: center; }
+            .paid-changelog .changelog-container { flex: none; height: auto; min-height: 160px; max-height: 420px; }
         }
         @media (max-width: 768px) {
+            html { scroll-padding-top: 88px; }
+            .container { padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
+            nav { padding: 8px 0; padding-top: max(8px, env(safe-area-inset-top)); }
+            nav .container { padding-inline: 6px; }
+            .nav-links { gap: 2px; }
+            .nav-links a { min-height: 50px; padding: 7px 0; font-size: .7rem; gap: 6px; border: 0; border-radius: 7px; }
+            .nav-links a i { font-size: 1rem; }
+            header, .monitor-header { padding: 44px 0 28px; }
+            .brand-heading { gap: 16px; }
+            .brand-hero h1 { font-size: clamp(2.1rem,6.5vw,3.4rem); }
+            .hero-mark { width: 56px; height: 56px; border-radius: 14px; }
             h1 { font-size: 2.6rem; }
-            .features-grid, .scripts-grid { grid-template-columns: 1fr; }
-            .monitor-header { padding: 3rem 0 1.5rem; }
+            .subtitle { font-size: 1rem; margin-top: 10px; }
+            .stats-bar { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 30px 16px; margin: 18px 0 28px; }
+            .stat-icon { font-size: 1.5rem; margin-bottom: 10px; }
+            .stat-number { font-size: clamp(20px,5.8vw,34px); }
+            .stat-label { font-size: .8rem; margin-top: 8px; }
+            section { padding-block: 28px; }
+            h2 { font-size: 1.35rem; margin-bottom: 24px; }
+            .features-grid, .scripts-grid { gap: 16px; }
+            .feature-item, .script-card, .group-tab { padding: 22px; }
+            .logos-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+            .logo-img { padding: 0; }
+            .paid-details { padding: 8px 0 28px; }
+            .paid-details > section { padding: 24px; }
+            .changelog-container { padding-inline: 20px; max-height: min(480px,65svh); }
+            .copy-btn, .group-tab button { min-height: 48px; }
+            .ops-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+            .ops-member { padding: 23px 12px; }
+            .ops-avatar-box { width: 86px; }
+            .mon-topbar { padding: 18px 16px; font-size: .74rem; }
+            .mon-enter-btn { max-width: 100%; padding: 14px 24px; }
+            footer { padding-bottom: max(30px, env(safe-area-inset-bottom)); }
+        }
+        @media (max-width: 580px) {
+            .features-grid, .scripts-grid { grid-template-columns: minmax(0,1fr); }
+            .brand-heading { flex-direction: column; gap: 18px; }
+            .brand-hero h1 { font-size: clamp(2.35rem,10vw,3rem); }
+            .hero-mark { width: 52px; height: 52px; border-radius: 13px; }
+        }
+        @media (max-width: 359px) {
+            .container { padding-inline: 16px; }
+            nav .container { padding-inline: 4px; }
+            .nav-links { gap: 1px; }
+            .nav-links a { font-size: 10.5px; }
+            .stat-number { font-size: 20px; }
+            .feature-item, .script-card, .group-tab { padding: 20px; }
+            .paid-details > section { padding: 20px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
         }
     </style>
 </head>
@@ -482,8 +256,8 @@
 <nav>
     <div class="container">
         <div class="nav-links">
-            <a href="#" data-page-target="txscript" class="active nav-wrap"><i class="fas fa-file-code"></i>TX Script</a>
-            <a href="#" data-page-target="paid"><i class="fas fa-crown"></i>付费版</a>
+            <a href="#" data-page-target="txscript" class="active"><i class="fas fa-file-code" aria-hidden="true"></i>TX Script</a>
+            <a href="#" data-page-target="paid"><i class="fas fa-crown" aria-hidden="true"></i>付费版</a>
             <a href="#" data-page-target="free"><i class="fas fa-gift"></i>公益系列</a>
             <a href="#" data-page-target="group"><i class="fas fa-users"></i>官方群聊</a>
             <a href="#" data-page-target="monitor"><i class="fas fa-chart-line"></i>数据监测</a>
@@ -495,8 +269,11 @@
 <div class="container">
 
     <div id="page-txscript" data-page class="active">
-        <header>
-            <h1>TX Script</h1>
+        <header class="brand-hero">
+            <div class="brand-heading">
+                <span class="hero-mark focus-glow" aria-hidden="true"><i class="fas fa-file-code"></i><img src="https://i.postimg.cc/Wp8j63c3/TX-Logo.png" alt="" width="68" height="68" decoding="async" onerror="this.hidden = true"></span>
+                <h1>TX Script</h1>
+            </div>
             <p class="subtitle">高级的Roblox脚本</p>
         </header>
         <div class="stats-bar">
@@ -522,7 +299,7 @@
             </div>
         </div>
         <section>
-            <h2>LOGO</h2>
+            <h2><i class="fas fa-shapes section-icon" aria-hidden="true"></i>LOGO</h2>
             <div class="logos-grid">
                 <div class="logo-card">
                     <div class="logo-placeholder">
@@ -530,7 +307,7 @@
                         LOGO 1<br>
                         <span></span>
                     </div>
-                    <img class="logo-img" src="https://raw.githubusercontent.com/JsYb666/TUIXUI_qun-809771141/refs/heads/TUIXUI/TX-Logo.png" alt="TX Logo" onerror="this.hidden = true">
+                    <img class="logo-img" src="https://i.postimg.cc/Wp8j63c3/TX-Logo.png" alt="TX Logo" width="800" height="800" loading="lazy" decoding="async" onerror="this.hidden = true">
                 </div>
                 <div class="logo-card">
                     <div class="logo-placeholder">
@@ -538,15 +315,21 @@
                         LOGO 2<br>
                         <span>待填图片</span>
                     </div>
-                    <img class="logo-img" src="https://raw.githubusercontent.com/JsYb666/TUIXUI_qun-809771141/refs/heads/TUIXUI/TX-Premium-logo.png" alt="TX Premium Logo" onerror="this.hidden = true">
+                    <img class="logo-img" src="https://i.postimg.cc/XJFqY0rQ/TX-Premium-logo.png" alt="TX Premium Logo" width="800" height="800" loading="lazy" decoding="async" onerror="this.hidden = true">
                 </div>
             </div>
         </section>
     </div>
 
     <div id="page-paid" data-page>
+        <header class="brand-hero">
+            <div class="brand-heading">
+                <span class="hero-mark hero-mark--premium" aria-hidden="true"><i class="fas fa-crown"></i><img src="https://i.postimg.cc/XJFqY0rQ/TX-Premium-logo.png" alt="" width="68" height="68" decoding="async" onerror="this.hidden = true"></span>
+                <h1>TX Premium</h1>
+            </div>
+        </header>
         <section>
-            <h2>亮点功能</h2>
+            <h2><i class="fas fa-layer-group section-icon" aria-hidden="true"></i>亮点功能</h2>
             <div class="features-grid">
                 <div class="feature-item">
                     <i class="fas fa-plug feature-icon"></i>
@@ -580,67 +363,69 @@
                 </div>
             </div>
         </section>
-        <section>
-            <h2>更新日志</h2>
+        <div class="paid-details">
+        <section class="paid-changelog">
+            <h2><i class="fas fa-clock-rotate-left section-icon" aria-hidden="true"></i>更新日志</h2>
             <div class="changelog-container" id="changelog-list">
                 <div style="text-align:center;color:#666;padding:2rem 0;">正在加载更新日志</div>
             </div>
         </section>
         <section class="pricing">
-            <h2>价格方案</h2>
+            <h2><i class="fas fa-gem section-icon" aria-hidden="true"></i>价格方案</h2>
             <div class="price-main">￥20/永久</div>
-            <div style="color:#777;margin:1rem 0 .8rem;font-size:.95rem;">一次性支付 · 终身授权</div>
-            <p style="color:#777;margin:1rem 0 .8rem;font-size:.95rem;">支持微信 支付宝付款</p>
-            <button class="buy-now-btn" onclick="buyNow()"><i class="fas fa-shopping-cart"></i>立刻购买</button>
+            <div class="pricing-note"><i class="fas fa-infinity" aria-hidden="true"></i>一次性支付 · 终身授权</div>
+            <p class="pricing-note"><i class="fas fa-wallet" aria-hidden="true"></i>支持微信 支付宝付款</p>
+            <button class="buy-now-btn focus-glow" onclick="buyNow()"><i class="fas fa-shopping-cart"></i>立刻购买</button>
             <div class="purchase-link-box">
                 <h3><i class="fas fa-link"></i> 购买链接</h3>
                 <div class="link-text" id="purchase-link-text">buy.txscript.top</div>
-                <button class="copy-btn" onclick="copyPurchaseLink()"><i class="fas fa-copy"></i>复制购买链接</button>
+                <button class="copy-btn" onclick="copyPurchaseLink(this)"><i class="fas fa-copy"></i>复制购买链接</button>
             </div>
         </section>
+        </div>
     </div>
 
     <div id="page-free" data-page>
         <header>
-            <h1>公益系列</h1>
+            <h1><i class="fas fa-gift title-icon" aria-hidden="true"></i>公益系列</h1>
             <p class="subtitle">免费 · 公益脚本</p>
         </header>
         <section>
-            <h2>TX公益系列</h2>
+            <h2><i class="fas fa-code-branch section-icon" aria-hidden="true"></i>TX公益系列</h2>
             <div class="scripts-grid">
                 <div class="script-card">
-                    <div class="script-title">TX V4免费版主脚本</div>
+                    <div class="script-title"><i class="fas fa-code script-icon" aria-hidden="true"></i>TX V4免费版主脚本</div>
                     <div class="script-code-box">TX = "TX Script"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/TX-Free/refs/heads/main/TX-V4.0"))()</div>
-                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
+                    <button class="copy-btn focus-glow" onclick="copyScript(this.previousElementSibling.textContent, this)"><i class="fas fa-copy"></i>复制脚本</button>
                 </div>
                 <div class="script-card">
-                    <div class="script-title">TX死铁轨刷债券V8</div>
+                    <div class="script-title"><i class="fas fa-code script-icon" aria-hidden="true"></i>TX死铁轨刷债券V8</div>
                     <div class="script-code-box">
 loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/heads/main/Auto-bond-V8"))()</div>
-                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
+                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent, this)"><i class="fas fa-copy"></i>复制脚本</button>
                 </div>
                 <div class="script-card">
-                    <div class="script-title">TX全自动翻译器</div>
+                    <div class="script-title"><i class="fas fa-code script-icon" aria-hidden="true"></i>TX全自动翻译器</div>
                     <div class="script-code-box">TX = "TX Script"
 Script = "全自动翻译"
 loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/heads/main/Auto-language"))()</div>
-                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
+                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent, this)"><i class="fas fa-copy"></i>复制脚本</button>
                 </div>
                 <div class="script-card">
-                    <div class="script-title">TX死铁轨刷银币</div>
+                    <div class="script-title"><i class="fas fa-code script-icon" aria-hidden="true"></i>TX死铁轨刷银币</div>
                     <div class="script-code-box">loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/heads/main/Auto-Grave-Silver"))()</div>
-                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
+                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent, this)"><i class="fas fa-copy"></i>复制脚本</button>
                 </div>
                 <div class="script-card">
-                    <div class="script-title">本熊死铁轨破解版-V3.6</div>
+                    <div class="script-title"><i class="fas fa-code script-icon" aria-hidden="true"></i>本熊死铁轨破解版-V3.6</div>
                     <div class="script-code-box">loadstring(game:HttpGet("https://raw.githubusercontent.com/8848870620/Hello-World/refs/heads/main/BH-3.6"))()</div>
-                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
+                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent, this)"><i class="fas fa-copy"></i>复制脚本</button>
                 </div>
                 <div class="script-card">
-                    <div class="script-title">待完善</div>
+                    <div class="script-title"><i class="fas fa-code script-icon" aria-hidden="true"></i>待完善</div>
                     <div class="script-code-box">...........</div>
-                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent)"><i class="fas fa-copy"></i>复制脚本</button>
+                    <button class="copy-btn" onclick="copyScript(this.previousElementSibling.textContent, this)"><i class="fas fa-copy"></i>复制脚本</button>
                 </div>
             </div>
         </section>
@@ -648,14 +433,14 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
 
     <div id="page-group" data-page>
         <header>
-            <h1>官方群聊</h1>
+            <h1><i class="fas fa-comments title-icon" aria-hidden="true"></i>官方群聊</h1>
             <p class="subtitle">官方消息 · 限免活动</p>
         </header>
         <section>
-            <h2>加入我们的QQ群</h2>
+            <h2><i class="fas fa-users section-icon" aria-hidden="true"></i>加入我们的QQ群</h2>
             <div class="scripts-grid">
                 <div class="group-tab">
-                    <h3><i class="fas fa-hashtag"></i> 主群</h3>
+                    <h3><i class="fas fa-users" aria-hidden="true"></i> 主群</h3>
                     <div class="group-number">160369111</div>
                     <div class="group-link">
                         点击链接加入群聊【「TX Script」[主群]】：<br>
@@ -667,19 +452,19 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
                 </div>
 
                 <div class="group-tab">
-                    <h3><i class="fas fa-hashtag"></i> 二群</h3>
+                    <h3><i class="fas fa-users" aria-hidden="true"></i> 理想国</h3>
                     <div class="group-number">850870810</div>
                     <div class="group-link">
-                        点击链接加入群聊【TX Script】：<br>
+                        点击链接加入群聊【TX Script[理想国]】：<br>
                         https://qm.qq.com/q/UMOq4T7MmQ
                     </div>
-                    <button onclick="copyGroup('点击链接加入群聊【TX Script[二群]<$ǿĀD>】：https://qm.qq.com/q/UMOq4T7MmQ', this)">
+                    <button onclick="copyGroup('点击链接加入群聊【TX Script[理想国]<$ǿĀD>】：https://qm.qq.com/q/UMOq4T7MmQ', this)">
                         <i class="fas fa-copy"></i> 复制加入链接
                     </button>
                 </div>
 
                 <div class="group-tab">
-                    <h3><i class="fas fa-hashtag"></i> TX特区</h3>
+                    <h3><i class="fas fa-users" aria-hidden="true"></i> 特区[核心]</h3>
                     <div class="group-number">766691084</div>
                     <div class="group-link">点击链接加入群聊【TX Script [特区]🈲广 [联邦]<$ǿĀD>】：https://qm.qq.com/q/j8SEXORrzy</div>
                     <button onclick="copyGroup('点击链接加入群聊【TX Script [特区]🈲广 [联邦]<$ǿĀD>】：https://qm.qq.com/q/j8SEXORrzy', this)">
@@ -687,22 +472,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
                     </button>
                 </div>
 
-                <div class="group-tab">
-                    <h3><i class="fas fa-hashtag"></i> Bot解卡测试群</h3>
-                    <div class="group-number">809771141</div>
-                    <div class="group-link">点击链接加入群聊【TX Script[解卡测试群]】：https://qm.qq.com/q/8ApFLVw4i6</div>
-                    <button onclick="copyGroup('点击链接加入群聊【TX Script[解卡测试群]】：https://qm.qq.com/q/8ApFLVw4i6', this)">
-                        <i class="fas fa-copy"></i> 复制加入链接
-                    </button>
-                </div>
-                <div class="group-tab">
-                    <h3><i class="fas fa-hashtag"></i> 神秘禁区</h3>
-                    <div class="group-number">287240944</div>
-                    <div class="group-link">点击链接加入群聊【TX Script脚本交流群】：https://qm.qq.com/q/TTdlFPVawk</div>
-                    <button onclick="copyGroup('点击链接加入群聊【TX Script脚本交流群】：https://qm.qq.com/q/TTdlFPVawk', this)">
-                        <i class="fas fa-copy"></i> 复制加入链接
-                    </button>
-                </div>
             </div>
         </section>
     </div>
@@ -733,7 +502,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
 
     <div id="page-team" data-page>
         <section class="team-developer-section">
-            <h2>开发者</h2>
+            <h2><i class="fas fa-laptop-code section-icon" aria-hidden="true"></i>开发者</h2>
             <div class="team-developer">
                 <div class="dev-avatar-box">
                     <div class="dev-avatar-placeholder">
@@ -743,12 +512,12 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
                     <img id="developer-avatar" class="dev-avatar" alt="开发者 QQ 头像" onerror="this.hidden = true">
                 </div>
                 <div class="dev-intro-box">
-                    <p>TX Script唯一开发者<br>TX Premium付费版开发者<br>TX Free公益系列开发者<br>TX Bot开发者<br>TX Obfuscator首席开发者<br>TX Web开发者</p>
+                    <p><i class="fas fa-file-code intro-icon" aria-hidden="true"></i>TX Script唯一开发者<br><i class="fas fa-crown intro-icon" aria-hidden="true"></i>TX Premium付费版开发者<br><i class="fas fa-gift intro-icon" aria-hidden="true"></i>TX Free公益系列开发者<br><i class="fas fa-robot intro-icon" aria-hidden="true"></i>TX Bot开发者<br><i class="fas fa-shield-halved intro-icon" aria-hidden="true"></i>TX Obfuscator首席开发者<br><i class="fas fa-globe intro-icon" aria-hidden="true"></i>TX Web开发者</p>
                 </div>
             </div>
         </section>
         <section class="ops-section">
-            <h2>运营</h2>
+            <h2><i class="fas fa-user-shield section-icon" aria-hidden="true"></i>运营</h2>
             <div class="ops-grid">
                 <div class="ops-member">
                     <div class="ops-avatar-box">
@@ -812,158 +581,282 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/JsYb666/Item/refs/hea
 </div>
 
 <script>
-document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', e => {
-        e.preventDefault();
-        const target = link.getAttribute('data-page-target');
-        const page = document.getElementById('page-' + target);
-        if (!page) return;
-        document.querySelectorAll('[data-page]').forEach(p => p.classList.remove('active'));
-        page.classList.add('active');
-        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-        link.classList.add('active');
-        if (target === 'monitor') monitorStart();
+const navLinks = [...document.querySelectorAll('.nav-links a')];
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+let monitorTimer;
+let pingTimer;
+
+function initVisualEffects() {
+    const navigation = document.querySelector('nav');
+    const updateNavigation = () => navigation.classList.toggle('is-scrolled', window.scrollY > 12);
+    updateNavigation();
+    window.addEventListener('scroll', updateNavigation, { passive: true });
+    if (reducedMotion.matches || !('IntersectionObserver' in window)) return;
+
+    // 内容始终可见；观察器只在首次进入视口时附加短动画。
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const element = entry.target;
+            element.classList.add('reveal-enter');
+            element.addEventListener('animationend', () => {
+                element.classList.remove('reveal-enter');
+                element.style.removeProperty('--reveal-delay');
+            }, { once: true });
+            observer.unobserve(element);
+        });
+    }, { threshold: .08, rootMargin: '0px 0px -16px 0px' });
+    document.querySelectorAll('.stat-big, .logo-card, .feature-item, .script-card, .group-tab, .paid-details, .team-developer, .ops-member, .mon-topbar, .mon-action').forEach((element, index) => {
+        element.style.setProperty('--reveal-delay', (index % 3) * 65 + 'ms');
+        observer.observe(element);
+    });
+}
+
+function showPage(target, scroll = true) {
+    const page = document.getElementById('page-' + target);
+    if (!page || !page.hasAttribute('data-page')) return;
+    document.querySelectorAll('[data-page]').forEach(item => {
+        item.classList.toggle('active', item === page);
+    });
+    navLinks.forEach(link => {
+        const active = link.dataset.pageTarget === target;
+        link.classList.toggle('active', active);
+        if (active) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+    });
+    stopMonitor();
+    if (target === 'monitor' && !document.hidden) monitorStart();
+    if (scroll) window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+navLinks.forEach(link => {
+    link.addEventListener('click', event => {
+        event.preventDefault();
+        const target = link.dataset.pageTarget;
+        if (window.location.hash !== '#' + target) window.location.hash = target;
+        else showPage(target);
     });
 });
+window.addEventListener('hashchange', () => showPage(window.location.hash.slice(1) || 'txscript'));
 
-async function loadChangelog() {
-    const container = document.getElementById('changelog-list');
+const logSources = {
+    paid: { id: 'changelog-list', url: './changelogs.json', empty: '暂无更新日志' }
+};
+
+function logState(container, message, icon = 'fa-clock') {
+    const state = document.createElement('div');
+    state.className = 'changelog-state';
+    state.setAttribute('role', 'status');
+    const symbol = document.createElement('i');
+    symbol.className = 'fas ' + icon;
+    symbol.setAttribute('aria-hidden', 'true');
+    state.append(symbol, document.createTextNode(message));
+    container.replaceChildren(state);
+    return state;
+}
+
+async function loadChangelog(kind) {
+    const source = logSources[kind];
+    const container = document.getElementById(source.id);
+    container.setAttribute('aria-busy', 'true');
+    logState(container, '正在加载更新日志');
     try {
-        const res = await fetch('./changelogs.json', { cache: 'no-cache' });
-        if (!res.ok) throw new Error();
-        const logs = await res.json();
-        if (!Array.isArray(logs) || logs.length === 0) {
-            container.innerHTML = '<div style="text-align:center;color:#555;padding:2rem;">暂无更新日志</div>';
+        const response = await fetch(source.url, { cache: 'no-cache', signal: AbortSignal.timeout(8000) });
+        if (!response.ok) throw new Error('Changelog unavailable');
+        const logs = await response.json();
+        if (!Array.isArray(logs)) throw new Error('Invalid changelog');
+        const entries = logs.filter(log => log && typeof log === 'object');
+        if (!entries.length) {
+            logState(container, source.empty, 'fa-clipboard-list');
             return;
         }
-        container.innerHTML = logs.map(log => `
-            <div class="changelog-item">
-                <div class="changelog-date">${log.date || '未知日期'}</div>
-                <div class="changelog-content">${log.content || '无内容'}</div>
-            </div>
-        `).join('');
+        const fragment = document.createDocumentFragment();
+        entries.forEach(log => {
+            const item = document.createElement('article');
+            item.className = 'changelog-item';
+            const date = document.createElement('div');
+            date.className = 'changelog-date';
+            date.textContent = String(log.date || '未知日期');
+            const content = document.createElement('div');
+            content.className = 'changelog-content';
+            const text = Array.isArray(log.content) ? log.content.join('\n') : String(log.content || '无内容');
+            // 保留既有日志的换行格式，通过纯文本渲染日志内容。
+            content.textContent = text.replace(/<br\s*\/?\s*>/gi, '\n');
+            item.append(date, content);
+            fragment.append(item);
+        });
+        container.replaceChildren(fragment);
     } catch {
-        container.innerHTML = '<div style="text-align:center;color:#777;padding:2rem;">加载更新日志失败</div>';
+        const state = logState(container, '加载更新日志失败', 'fa-circle-exclamation');
+        const retry = document.createElement('button');
+        retry.type = 'button';
+        retry.className = 'changelog-retry';
+        retry.textContent = '重新加载';
+        retry.addEventListener('click', () => loadChangelog(kind));
+        state.append(retry);
+    } finally {
+        container.setAttribute('aria-busy', 'false');
     }
 }
 
-function animateNumber(el, target, duration = 2200, isPercent = false) {
-    const startTime = Date.now();
-    const step = () => {
-        const progress = Math.min((Date.now() - startTime) / duration, 1);
-        const value = isPercent ? (progress * target).toFixed(1) : Math.floor(progress * target);
-        el.textContent = isPercent ? value + '%' : value.toLocaleString() + '+';
+function animateNumber(el, target, isPercent = false) {
+    if (!el) return;
+    if (reducedMotion.matches) {
+        el.textContent = isPercent ? target.toFixed(1) + '%' : target.toLocaleString('en-US') + '+';
+        return;
+    }
+    const duration = 1100;
+    let started;
+    const step = time => {
+        if (started === undefined) started = time;
+        const progress = Math.min((time - started) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = isPercent
+            ? (eased * target).toFixed(1) + '%'
+            : Math.floor(eased * target).toLocaleString('en-US') + '+';
         if (progress < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
 }
 
-function copyScript(text) {
-    navigator.clipboard.writeText(text.trim()).then(() => {
-        const toast = document.createElement('div');
-        toast.textContent = '已复制脚本';
-        toast.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:14px 28px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.6);z-index:9999;font-size:1.02rem;';
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2800);
-    }).catch(() => alert('复制失败，请手动复制：\n' + text));
+let toastTimer;
+function showToast(message) {
+    let toast = document.getElementById('feedback-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'feedback-toast';
+        toast.className = 'toast';
+        toast.setAttribute('role', 'status');
+        toast.setAttribute('aria-live', 'polite');
+        document.body.append(toast);
+    }
+    clearTimeout(toastTimer);
+    toast.textContent = message;
+    toast.hidden = false;
+    toastTimer = setTimeout(() => { toast.hidden = true; }, 2400);
 }
 
-function copyGroup(text, btn) {
-    navigator.clipboard.writeText(text).then(() => {
-        const orig = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i> 已复制';
-        setTimeout(() => btn.innerHTML = orig, 2000);
+async function copyText(text, message) {
+    const value = String(text).trim();
+    try {
+        try {
+            if (!navigator.clipboard) throw new Error('Clipboard unavailable');
+            await navigator.clipboard.writeText(value);
+        } catch {
+            const field = document.createElement('textarea');
+            const focused = document.activeElement;
+            field.value = value;
+            field.setAttribute('readonly', '');
+            field.style.cssText = 'position:fixed;top:0;left:-9999px;opacity:0;';
+            document.body.append(field);
+            let copied = false;
+            try {
+                field.select();
+                copied = document.execCommand('copy');
+            } finally {
+                field.remove();
+                if (focused && typeof focused.focus === 'function') focused.focus({ preventScroll: true });
+            }
+            if (!copied) throw new Error('Copy failed');
+        }
+        showToast(message);
+        return true;
+    } catch {
+        showToast('复制失败，请手动复制');
+        return false;
+    }
+}
+function flashCopied(button) {
+    if (!button) return;
+    clearTimeout(button._copyFeedbackTimer);
+    button.classList.add('is-copied');
+    const icon = button.querySelector('i');
+    if (icon) { icon.classList.remove('fa-copy'); icon.classList.add('fa-check'); }
+    button._copyFeedbackTimer = setTimeout(() => {
+        button.classList.remove('is-copied');
+        if (icon) { icon.classList.remove('fa-check'); icon.classList.add('fa-copy'); }
+    }, 1800);
+}
+async function copyScript(text, button) {
+    if (await copyText(text, '已复制脚本')) flashCopied(button);
+}
+async function copyGroup(text, button) {
+    if (await copyText(text, '已复制')) flashCopied(button);
+}
+async function copyPurchaseLink(button) {
+    if (await copyText(document.getElementById('purchase-link-text').textContent, '已复制购买链接')) flashCopied(button);
+}
+function buyNow() { window.open('https://buy.txscript.top/', '_blank', 'noopener,noreferrer'); }
+
+const DEVELOPER_QQ = '3656908751';
+const OPS_QQS = ['3755292577', '554712935', '2724664886', '3469075920'];
+
+function loadAvatars() {
+    const developer = document.getElementById('developer-avatar');
+    developer.src = 'https://q1.qlogo.cn/g?b=qq&nk=' + DEVELOPER_QQ + '&s=640';
+    document.querySelectorAll('.ops-avatar').forEach((img, index) => {
+        if (OPS_QQS[index]) img.src = 'https://q1.qlogo.cn/g?b=qq&nk=' + OPS_QQS[index] + '&s=640';
     });
-}
-
-function copyPurchaseLink() {
-    const link = document.getElementById('purchase-link-text').textContent;
-    navigator.clipboard.writeText(link).then(() => {
-        const toast = document.createElement('div');
-        toast.textContent = '已复制购买链接';
-        toast.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:14px 28px;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,0.6);z-index:9999;font-size:1.02rem;';
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2800);
-    });
-}
-
-const DEVELOPER_QQ = "3656908751";
-
-function loadDeveloperAvatar() {
-    const img = document.getElementById('developer-avatar');
-    if (!img) return;
-    img.hidden = false;
-    img.src = `https://q1.qlogo.cn/g?b=qq&nk=${DEVELOPER_QQ}&s=640`;
-}
-
-const OPS_QQS = ["3755292577", "554712935", "2724664886", "3469075920", ""];
-
-function loadOpsAvatars() {
-    document.querySelectorAll('.ops-avatar').forEach((img, i) => {
-        const qq = OPS_QQS[i];
-        if (!qq) return;
-        img.hidden = false;
-        img.src = `https://q1.qlogo.cn/g?b=qq&nk=${qq}&s=640`;
-    });
-}
-
-
-async function loadQqNicknames() {
-    apply(document.getElementById('developer-nickname'), DEVELOPER_QQ, '开发者');
-    const nameEls = document.querySelectorAll('.ops-name');
-    document.querySelectorAll('.ops-avatar').forEach((img, i) => {
-        const qq = OPS_QQS[i];
-        if (qq && nameEls[i]) apply(nameEls[i], qq, '协管成员 ' + (i + 1));
-    });
-}
-
-function buyNow() { 
-    window.open('https://buy.txscript.top/', '_blank');
-}
-
-let monitorStarted = false;
-
-function nowStr() {
-    const d = new Date();
-    const p = n => String(n).padStart(2, '0');
-    return `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
 }
 
 function clockTick() {
-    document.getElementById('mon-clock').textContent = nowStr();
+    document.getElementById('mon-clock').textContent = new Date().toLocaleTimeString('zh-CN', { hour12: false });
 }
-
+let pingController;
 async function refreshPing() {
-    const t0 = Date.now();
+    if (pingController) return;
+    pingController = new AbortController();
+    const controller = pingController;
+    const timeout = setTimeout(() => controller.abort(), 6000);
+    const started = performance.now();
     try {
-        await fetch('https://webhook.txscript.top/api/stats', { method: 'HEAD', cache: 'no-cache' });
-        const ping = Date.now() - t0;
-        document.getElementById('mon-ping').textContent = ping + ' ms';
+        const response = await fetch('https://webhook.txscript.top/api/stats', {
+            method: 'HEAD', cache: 'no-cache', signal: controller.signal
+        });
+        if (!response.ok) throw new Error('Service unavailable');
+        document.getElementById('mon-ping').textContent = Math.round(performance.now() - started) + ' ms';
     } catch {
-        document.getElementById('mon-ping').textContent = 'ms';
+        document.getElementById('mon-ping').textContent = '— ms';
+    } finally {
+        clearTimeout(timeout);
+        if (pingController === controller) pingController = undefined;
     }
 }
-
 function monitorStart() {
-    if (monitorStarted) return;
-    monitorStarted = true;
-    setInterval(clockTick, 1000);
     clockTick();
     refreshPing();
-    setInterval(refreshPing, 8000);
+    monitorTimer = setInterval(clockTick, 1000);
+    pingTimer = setInterval(refreshPing, 10000);
 }
+function stopMonitor() {
+    clearInterval(monitorTimer);
+    clearInterval(pingTimer);
+    if (pingController) pingController.abort();
+}
+document.addEventListener('visibilitychange', () => {
+    stopMonitor();
+    if (!document.hidden && document.getElementById('page-monitor').classList.contains('active')) monitorStart();
+});
 
 document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        animateNumber(document.getElementById('exec-count'), 1793739, 2200);
-        animateNumber(document.getElementById('user-count'), 509, 2200);
-        animateNumber(document.getElementById('free-user-count'), 46881, 2200);
-        animateNumber(document.getElementById('success-rate'), 98.9, 2200, true);
-    }, 400);
-    loadChangelog();
-    loadDeveloperAvatar();
-    loadOpsAvatars();
-    loadQqNicknames();
+    const initial = window.location.hash.slice(1);
+    showPage(navLinks.some(link => link.dataset.pageTarget === initial) ? initial : 'txscript', false);
+    animateNumber(document.getElementById('exec-count'), 1793739);
+    animateNumber(document.getElementById('user-count'), 509);
+    animateNumber(document.getElementById('free-user-count'), 46881);
+    animateNumber(document.getElementById('success-rate'), 98.9, true);
+    loadChangelog('paid');
+    loadAvatars();
+    document.querySelectorAll('button').forEach(button => { button.type = 'button'; });
+    document.querySelectorAll('i.fas').forEach(icon => icon.setAttribute('aria-hidden', 'true'));
+    document.querySelectorAll('.script-card').forEach(card => {
+        if (card.querySelector('.script-title').textContent === '待完善') {
+            const button = card.querySelector('button');
+            button.disabled = true;
+            button.removeAttribute('onclick');
+        }
+    });
+    initVisualEffects();
 });
 </script>
 </body>
